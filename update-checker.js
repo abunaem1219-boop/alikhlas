@@ -118,4 +118,4 @@ async function checkForUpdate() {
 /* ====== RUN AFTER PAGE LOAD ====== */
 window.addEventListener("load", function () {
     setTimeout(checkForUpdate, 1500);
-});
+}); 
