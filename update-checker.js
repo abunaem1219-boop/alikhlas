@@ -13,7 +13,7 @@ const CURRENT_VERSION = "1.2.0";   // আপনার বর্তমান অ�
    https://raw.githubusercontent.com/username/repo/main/update-config.json
 ========================================= */
 
-const UPDATE_CONFIG_URL = "PASTE_YOUR_UPDATE_CONFIG_LINK_HERE";
+const UPDATE_CONFIG_URL = "https://raw.githubusercontent.com/abunaem1219-boop/alikhlas/refs/heads/main/update-config.json";
 
 
 /* ====== CREATE POPUP UI ====== */
