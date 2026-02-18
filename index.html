@@ -33,6 +33,11 @@
             /* Soft Shadow */
             --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); 
             --radius: 20px;
+
+            /* Chat Specific Colors */
+            --chat-bg: #e5ddd5;
+            --chat-mine: #dcf8c6;
+            --chat-others: #ffffff;
         }
 
         /* DARK MODE OVERRIDES */
@@ -42,6 +47,9 @@
             --glass-border: 1px solid rgba(255, 255, 255, 0.1);
             --text-light: #e4e6eb;
             --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --chat-bg: #0b141a;
+            --chat-mine: #005c4b;
+            --chat-others: #202c33;
         }
 
         /* GLOBAL RESET & BASE */
@@ -123,6 +131,7 @@
         /* FORM ELEMENTS */
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; font-family: inherit; background: rgba(255,255,255,0.5); color: var(--text-light); transition: 0.3s; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 239, 125, 0.2); background: #fff; }
+        html.dark-mode input, html.dark-mode select, html.dark-mode textarea { background: rgba(0,0,0,0.3); color: white; border-color: rgba(255,255,255,0.1); }
 
         button { background: var(--primary-gradient); color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         button:active { transform: scale(0.97); }
@@ -232,32 +241,98 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); }
         }
 
-        /* CHAT SYSTEM (Modern) */
-        #chat-container { height: calc(100vh - 130px); display: flex; flex-direction: column; position: relative; }
-        #messages-list { 
-            flex: 1; overflow-y: auto; padding: 15px; 
-            background-color: var(--bg-light);
-            background-image: radial-gradient(var(--text-light) 1px, transparent 1px);
-            background-size: 20px 20px;
-            opacity: 0.95;
-            border-radius: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; 
+        /* --- PREMIUM CHAT SYSTEM STYLES --- */
+        /* INBOX LIST */
+        #chat-inbox-list { padding-bottom: 20px; }
+        .chat-list-item {
+            display: flex; align-items: center; padding: 12px 10px;
+            background: var(--glass-surface); border-radius: 12px;
+            margin-bottom: 8px; cursor: pointer; transition: background 0.2s;
+            border: var(--glass-border);
         }
-        .msg { max-width: 75%; padding: 10px 14px; border-radius: 18px; position: relative; font-size: 0.9rem; word-wrap: break-word; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .msg.mine { 
-            background: var(--primary-gradient); 
-            align-self: flex-end; 
-            border-bottom-right-radius: 4px; 
-            color: white; 
+        .chat-list-item:hover { background: rgba(0,0,0,0.05); }
+        .chat-avatar-container { position: relative; margin-right: 12px; }
+        .chat-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+        .status-indicator {
+            position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px;
+            border-radius: 50%; border: 2px solid white; background: #ccc;
         }
-        .msg.others { 
-            background: white; 
-            align-self: flex-start; 
-            border-bottom-left-radius: 4px; 
-            color: #333; 
+        .status-online { background: #00b894; }
+        .chat-info { flex: 1; overflow: hidden; }
+        .chat-name { font-weight: 600; font-size: 0.95rem; display: block; }
+        .chat-preview { font-size: 0.8rem; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-time { font-size: 0.7rem; color: #999; margin-left: 8px; }
+
+        /* CHAT ROOM */
+        #chat-room-view { display: flex; flex-direction: column; height: calc(100vh - 130px); background: var(--chat-bg); position: relative; }
+        .chat-pattern {
+            position: absolute; width:100%; height:100%; top:0; left:0; opacity: 0.06; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
         }
-        .msg.admin-msg { border: 2px solid var(--accent); }
-        .msg-meta { font-size: 0.65rem; opacity: 0.7; text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 10px; align-items: center;}
-        html.dark-mode .msg.others { background: #3a3b3c; color: white; }
+        .chat-room-header {
+            background: var(--glass-surface); padding: 10px; display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1); z-index: 10;
+        }
+        .chat-back-btn { font-size: 1.2rem; padding: 5px 10px; cursor: pointer; color: var(--primary); }
+        .room-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+        .room-info h4 { margin: 0; font-size: 0.95rem; line-height: 1.1; }
+        .room-info p { margin: 0; font-size: 0.7rem; color: #888; }
+        
+        #messages-container { flex: 1; overflow-y: auto; padding: 15px; z-index: 5; display: flex; flex-direction: column; gap: 4px; }
+        
+        /* BUBBLES */
+        .msg-bubble {
+            max-width: 75%; padding: 8px 12px; font-size: 0.9rem; border-radius: 8px; position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; margin-bottom: 4px;
+        }
+        .msg-bubble.mine {
+            background: var(--chat-mine); align-self: flex-end; color: var(--text-light);
+            border-top-right-radius: 0;
+        }
+        .msg-bubble.others {
+            background: var(--chat-others); align-self: flex-start; color: var(--text-light);
+            border-top-left-radius: 0; margin-left: 35px; /* space for avatar */
+        }
+        html.dark-mode .msg-bubble.mine { color: #fff; }
+        html.dark-mode .msg-bubble.others { color: #fff; }
+        
+        /* Message Avatar for others */
+        .msg-avatar-small {
+            position: absolute; left: -35px; top: 0; width: 28px; height: 28px; 
+            border-radius: 50%; object-fit: cover; cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Tails */
+        .msg-bubble.mine::after {
+            content: ""; position: absolute; top: 0; right: -8px; width: 0; height: 0;
+            border-top: 10px solid var(--chat-mine); border-right: 10px solid transparent;
+        }
+        .msg-bubble.others::after {
+            content: ""; position: absolute; top: 0; left: -8px; width: 0; height: 0;
+            border-top: 10px solid var(--chat-others); border-left: 10px solid transparent;
+        }
+
+        .msg-meta { display: flex; justify-content: flex-end; align-items: center; font-size: 0.65rem; margin-top: 3px; opacity: 0.6; gap: 5px; }
+        .msg-name { font-weight: bold; font-size: 0.75rem; color: var(--primary); margin-bottom: 2px; display: block; }
+        .msg-reply-bar { font-size:0.75rem; background:rgba(0,0,0,0.05); padding:4px; border-left:3px solid var(--primary); margin-bottom:4px; border-radius: 4px; }
+        
+        .chat-input-area { 
+            padding: 8px; background: var(--glass-surface); border-top: var(--glass-border); 
+            display: flex; gap: 8px; align-items: center; z-index: 10;
+        }
+        
+        /* TYPING INDICATOR */
+        .typing-indicator {
+            background: var(--chat-others); padding: 8px 15px; border-radius: 20px;
+            display: inline-flex; align-items: center; gap: 4px; margin-left: 35px; margin-bottom: 10px; width: fit-content;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .typing-dot { width: 6px; height: 6px; background: #999; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+        /* --- END CHAT STYLES --- */
 
         /* FLOATING ACTION BUTTON (FAB) */
         .fab-container { position: fixed; bottom: 80px; right: 20px; z-index: 90; display: flex; flex-direction: column-reverse; gap: 10px; align-items: flex-end; }
@@ -566,26 +641,73 @@
             <button id="btn-load-members" class="load-more-btn secondary small-btn" style="margin: 10px auto; display:block;" onclick="loadMembers(true)" data-i18n="btn_load_more">Load More</button>
         </div>
 
-        <!-- VIEW: CHAT -->
+        <!-- VIEW: CHAT (Refactored for List & Room) -->
         <div id="view-chat" class="section hidden">
-            <div id="chat-container">
-                <div id="pinned-message-container" style="background:var(--glass-surface); padding:8px; margin-bottom:5px; border-radius:10px; border:var(--glass-border); display:none; justify-content:space-between; align-items:center; cursor:pointer;" onclick="scrollToPinned()">
-                    <div style="font-size:0.8rem; color:var(--primary);"><i class="fas fa-thumbtack"></i> <span id="pinned-text-preview">Pinned Message</span></div>
-                    <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+            
+            <!-- LIST VIEW (Inbox) -->
+            <div id="chat-list-view">
+                <h3 style="padding:0 0 15px 5px;" data-i18n="nav_chat">💬 Messages</h3>
+                <!-- Inbox List -->
+                <div id="chat-inbox-list">
+                    <!-- Community Chat Pinned -->
+                    <div class="chat-list-item" onclick="openChatRoom('community', '📣 Community Chat', '')">
+                        <div class="chat-avatar-container">
+                            <div style="width:50px; height:50px; border-radius:50%; background:var(--primary-gradient); display:flex; align-items:center; justify-content:center; color:white; font-size:1.5rem;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="chat-info">
+                            <span class="chat-name">Community Chat</span>
+                            <span class="chat-preview">Tap to join general discussion</span>
+                        </div>
+                    </div>
+                    <!-- Personal Chats will be injected here -->
+                    <div id="private-chats-container"></div>
+                </div>
+            </div>
+
+            <!-- ROOM VIEW (Conversation) -->
+            <div id="chat-room-view" class="hidden">
+                <div class="chat-pattern"></div>
+                
+                <!-- Room Header -->
+                <div class="chat-room-header">
+                    <i class="fas fa-arrow-left chat-back-btn" onclick="backToChatList()"></i>
+                    <img id="room-avatar-img" src="" class="room-avatar">
+                    <div class="room-info">
+                        <h4 id="room-name-text">User Name</h4>
+                        <p id="room-status-text">Offline</p>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div id="messages-container">
+                    <div id="pinned-message-container" style="background:var(--glass-surface); padding:8px; margin-bottom:5px; border-radius:10px; border:var(--glass-border); display:none; justify-content:space-between; align-items:center; cursor:pointer; width:100%;" onclick="scrollToPinned()">
+                        <div style="font-size:0.8rem; color:var(--primary);"><i class="fas fa-thumbtack"></i> <span id="pinned-text-preview">Pinned Message</span></div>
+                        <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                    </div>
+                    
+                    <div id="messages-list" style="flex:1;"></div>
+                    
+                    <!-- Typing Indicator -->
+                    <div id="typing-indicator" class="typing-indicator hidden">
+                        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                    </div>
                 </div>
                 
-                <div id="messages-list"></div>
-                
-                <div class="chat-input-area" style="background:var(--glass-surface); padding:10px; border-radius:20px; border:var(--glass-border);">
-                    <div id="reply-preview-bar" style="display:none; font-size:0.75rem; color:#666; margin-bottom:5px; border-left:3px solid var(--primary); padding-left:8px; justify-content:space-between;">
+                <!-- Input Area -->
+                <div class="chat-input-area">
+                    <div id="reply-preview-bar" style="display:none; font-size:0.75rem; color:#666; margin-bottom:5px; width:100%; justify-content:space-between;">
                         <span>Replying to <b id="reply-to-name">Name</b></span>
                         <i class="fas fa-times" onclick="cancelReply()"></i>
                     </div>
-                    <div class="input-row" style="display:flex; gap:8px;">
-                        <input type="text" id="chat-msg-input" placeholder="Type..." style="margin:0; border:none;">
-                        <button onclick="sendChat()" style="width:auto; border-radius:50%; width:45px; height:45px; padding:0;"><i class="fas fa-paper-plane"></i></button>
-                        <button onclick="document.getElementById('chat-img-input').click()" style="width:auto; border-radius:50%; width:45px; height:45px; padding:0; background:#eee; color:#666;"><i class="fas fa-image"></i></button>
+                    <div style="flex:1; display:flex; gap:8px;">
+                        <button onclick="document.getElementById('chat-img-input').click()" style="width:40px; height:40px; border-radius:50%; padding:0; background:#eee; color:#666; flex-shrink:0;"><i class="fas fa-camera"></i></button>
                         <input type="file" id="chat-img-input" accept="image/*" class="hidden" onchange="handleChatImageUpload(this)">
+                        
+                        <input type="text" id="chat-msg-input" placeholder="Type a message..." style="margin:0; border:none; border-radius:20px; padding:0 15px; background:#f0f2f5;">
+                        
+                        <button onclick="sendChat()" style="width:40px; height:40px; border-radius:50%; padding:0; flex-shrink:0;"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -672,9 +794,13 @@
                     <p id="profile-email" style="opacity:0.8; font-size:0.9rem; margin-bottom:5px;">...</p>
                     <p id="profile-address" style="opacity:0.8; font-size:0.9rem;">...</p>
 
-                    <div id="profile-contact-actions" style="margin-top:15px; display:flex; justify-content:center; gap:15px;">
-                        <a id="link-call" href="#" class="hidden" style="color:var(--primary); font-size:1.5rem;"><i class="fas fa-phone-square-alt"></i></a>
-                        <a id="link-fb" href="#" target="_blank" class="hidden" style="color:#1877F2; font-size:1.5rem;"><i class="fab fa-facebook-square"></i></a>
+                    <div id="profile-contact-actions" style="margin-top:15px; display:flex; justify-content:center; gap:15px; align-items:center;">
+                        <!-- Message Button Added -->
+                        <button id="btn-profile-msg" class="secondary hidden" style="width:auto; padding:8px 15px; border-radius:20px; font-size:0.9rem;">
+                            <i class="fas fa-comment-dots"></i> Message
+                        </button>
+                        <a id="link-call" href="#" class="hidden" style="color:var(--primary); font-size:1.8rem;"><i class="fas fa-phone-square-alt"></i></a>
+                        <a id="link-fb" href="#" target="_blank" class="hidden" style="color:#1877F2; font-size:1.8rem;"><i class="fab fa-facebook-square"></i></a>
                     </div>
                 </div>
 
@@ -978,7 +1104,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, where, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getDatabase, ref, push, onChildAdded, onChildChanged, onChildRemoved, remove, update, get, query as rQuery, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, onChildChanged, onChildRemoved, remove, update, get, query as rQuery, limitToLast, onValue, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAZ_pL1E_x7UyWoDDKg0mo6h15CZZhPQhA",
@@ -994,7 +1120,8 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const rtdb = getDatabase(app);
+        // সরাসরি লিঙ্কটি এখানে দিয়ে দিন
+const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.com");
 
         let currentUser = null;
         let userData = {};
@@ -1005,6 +1132,11 @@
         let pinnedMessageId = null;
         let noticeScrollInterval = null;
         let tempChatImage = null; // Store image file before sending
+
+        // CHAT VARIABLES
+        let currentChatId = 'community'; // 'community' or 'uid1_uid2'
+        let chatListener = null;
+        let typingTimeout = null;
 
         // --- CORE UTILS ---
         window.toggleMenu = () => { document.getElementById('header-dropdown').classList.toggle('show'); }
@@ -1035,7 +1167,7 @@
             nav_profile: { en: "Profile", bn: "প্রোফাইল" },
             stat_collection: { en: "Collection", bn: "সংগ্রহ" },
             stat_expense: { en: "Expense", bn: "খরচ" },
-            stat_balance: { en: "Balance", bn: "জের" },
+            stat_balance: { en: "Balance", bn: "অবশিষ্ট আছে" },
             stat_members: { en: "Members", bn: "সদস্য" },
             monthly_target: { en: "Monthly Target", bn: "এবারের লক্ষ্য" },
             edit_target: { en: "Edit", bn: "পরিবর্তন" },
@@ -1140,38 +1272,38 @@
         }
 
         window.router = (viewName, navEl, param = null) => {
-            // ১. সব সেকশন লুকিয়ে ফেলা
+            // Hide all sections
             document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
-            // ২. নির্দিষ্ট সেকশন দেখানো
+            // Show target section
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
 
-            // ৩. নেভিগেশন বারের একটিভ কালার সেট করা
+            // Update Nav State
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(navEl) navEl.classList.add('active');
 
-            // --- নতুন কোড শুরু: প্লাস আইকন (FAB) শুধু হোমপেজে দেখাবে ---
+            // FAB Logic
             const fab = document.querySelector('.fab-container');
             if(viewName === 'home') {
-                fab.classList.remove('hidden'); // হোমপেজে আইকনটি দেখাবে
+                fab.classList.remove('hidden');
             } else {
-                fab.classList.add('hidden');    // অন্য সব পেজে লুকিয়ে রাখবে
-                
-                // যদি মেনু খোলা থাকে, তবে অন্য পেজে যাওয়ার সময় সেটা বন্ধ করে দেবে
+                fab.classList.add('hidden');
                 document.getElementById('fab-menu').classList.remove('show');
                 document.getElementById('fab-icon').className = 'fas fa-plus';
             }
-            // --- নতুন কোড শেষ ---
 
-            // ৪. হোমপেজ থেকে অন্য পেজে গেলে অটো-স্ক্রল বন্ধ করা
+            // Stop Home Auto-scroll
             if(viewName !== 'home' && noticeScrollInterval) clearInterval(noticeScrollInterval);
 
-            // ৫. পেজ অনুযায়ী ডাটা লোড করা
+            // Load Data based on view
             if(viewName === 'home') loadHomeData();
             if(viewName === 'blood') loadBloodRequests();
             if(viewName === 'members') loadMembers(); 
             if(viewName === 'chat') { 
-                scrollToBottomChat(); 
-                markChatRead(); 
+                // Default to Inbox List View
+                document.getElementById('chat-list-view').classList.remove('hidden');
+                document.getElementById('chat-room-view').classList.add('hidden');
+                loadChatInbox();
+                markChatRead();
             }
             if(viewName === 'admin') loadAdminData();
             if(viewName === 'profile') loadProfile(param);
@@ -1271,6 +1403,7 @@
                     }
                     startHeartbeat();
                     setupNotificationListener();
+                    setupPresenceSystem();
                     setTimeout(() => updateLanguage(localStorage.getItem('lang') || 'en'), 500);
                 }
 
@@ -1278,7 +1411,8 @@
                 document.getElementById('app-interface').classList.remove('hidden');
                 router('home', document.querySelector('.nav-item.active'));
 
-                setupChatListener();
+                // Initialize chat listeners only for inbox presence
+                loadChatInbox(); 
                 setupBloodNotification();
                 fetchDonationSettings();
                 loadAboutData();
@@ -1318,6 +1452,19 @@
                     updateDoc(doc(db, "users", currentUser.uid), { lastActive: serverTimestamp() });
                 }
             }, 60000);
+        }
+        
+        // PRESENCE SYSTEM
+        function setupPresenceSystem() {
+            const connectedRef = ref(rtdb, '.info/connected');
+            const userStatusRef = ref(rtdb, 'status/' + currentUser.uid);
+
+            onValue(connectedRef, (snap) => {
+                if (snap.val() === true) {
+                    onDisconnect(userStatusRef).set({ state: 'offline', last_changed: serverTimestamp() });
+                    set(userStatusRef, { state: 'online', last_changed: serverTimestamp() });
+                }
+            });
         }
 
         async function fetchMonthlyTarget() {
@@ -1379,7 +1526,6 @@
 
         window.loadMoreNotices = async () => {
             const list = document.getElementById('notice-list');
-            // Don't clear if loading more, but here we assume one load for home carousel
             
             let q = query(collection(db, "notices"), orderBy("timestamp", "desc"), limit(5));
             const snapshot = await getDocs(q);
@@ -1698,6 +1844,18 @@
                 if(u.phone) { linkCall.href = `tel:${u.phone}`; linkCall.classList.remove('hidden'); }
                 const linkFb = document.getElementById('link-fb');
                 if(u.socialLinks?.facebook) { linkFb.href = u.socialLinks.facebook; linkFb.classList.remove('hidden'); }
+
+                // --- Message Button Logic ---
+                const msgBtn = document.getElementById('btn-profile-msg');
+                if(!isOwn) {
+                    msgBtn.classList.remove('hidden');
+                    msgBtn.onclick = () => {
+                        // Open Chat Room immediately
+                        openChatRoom(targetId, u.name, u.profileImage || '');
+                    };
+                } else {
+                    msgBtn.classList.add('hidden');
+                }
             }
             toggleLoader(false);
         }
@@ -1740,15 +1898,154 @@
             toggleLoader(false);
         }
 
-        function setupChatListener() {
-            const chatRef = ref(rtdb, 'messages');
+        // --- NEW CHAT SYSTEM LOGIC ---
+
+        window.loadChatInbox = function() {
+            if(!currentUser) return;
+            const inboxContainer = document.getElementById('private-chats-container');
+            const chatsRef = ref(rtdb, `user_chats/${currentUser.uid}`);
+            
+            // Listen for changes in user's chat list
+            onValue(chatsRef, (snapshot) => {
+                inboxContainer.innerHTML = '';
+                const chats = [];
+                snapshot.forEach(child => {
+                    chats.push({ uid: child.key, ...child.val() });
+                });
+
+                // Sort by time
+                chats.sort((a,b) => b.timestamp - a.timestamp);
+
+                chats.forEach(chat => {
+                    const time = new Date(chat.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const avatar = chat.pic || 'https://via.placeholder.com/50';
+                    
+                    const el = document.createElement('div');
+                    el.className = 'chat-list-item';
+                    el.onclick = () => openChatRoom(chat.uid, chat.name, chat.pic);
+                    el.innerHTML = `
+                        <div class="chat-avatar-container">
+                            <img src="${avatar}" class="chat-avatar">
+                            <!-- Status could be added here if needed -->
+                        </div>
+                        <div class="chat-info">
+                            <span class="chat-name">${chat.name}</span>
+                            <span class="chat-preview">${chat.lastMsg}</span>
+                        </div>
+                        <span class="chat-time">${time}</span>
+                    `;
+                    inboxContainer.appendChild(el);
+                });
+            });
+        }
+
+        window.openChatRoom = async function(targetId, targetName, targetPic) {
+    // ১. চ্যাট আইডি নির্ধারণ
+    if(targetId === 'community') {
+        currentChatId = 'community';
+    } else {
+        const uid1 = currentUser.uid < targetId ? currentUser.uid : targetId;
+        const uid2 = currentUser.uid < targetId ? targetId : currentUser.uid;
+        currentChatId = `${uid1}_${uid2}`;
+    }
+
+    // ২. ভিউ পরিবর্তন (এটাই মূল ফিক্স)
+    // আমরা এখানে router() ফাংশন কল করব না, কারণ সেটা চ্যাট রুম বন্ধ করে দেয়।
+    // তার বদলে আমরা ম্যানুয়ালি পেজ চেঞ্জ করব।
+    
+    // সব সেকশন লুকানো
+    document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
+    // চ্যাট সেকশন দেখানো
+    document.getElementById('view-chat').classList.remove('hidden');
+
+    // ৩. লিস্ট লুকিয়ে চ্যাট রুম দেখানো
+    document.getElementById('chat-list-view').classList.add('hidden');
+    document.getElementById('chat-room-view').classList.remove('hidden');
+    
+    // ৪. নেভিগেশন বার আপডেট করা
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelector('.nav-item:nth-child(3)').classList.add('active'); // ৩ নম্বর আইটেম (চ্যাট) একটিভ হবে
+
+    // ৫. হেডার ইনফো সেট করা
+    document.getElementById('room-name-text').textContent = targetName;
+    const roomAvatar = document.getElementById('room-avatar-img');
+    
+    if(targetId === 'community') {
+        roomAvatar.src = "https://cdn-icons-png.flaticon.com/512/33/33308.png"; 
+        document.getElementById('room-status-text').textContent = "Official Group";
+    } else {
+        roomAvatar.src = targetPic || 'https://via.placeholder.com/50';
+        
+        // ইউজারের স্ট্যাটাস চেক করা
+        const statusRef = ref(rtdb, `status/${targetId}`);
+        onValue(statusRef, (snap) => {
+            const status = snap.val();
+            const statusText = document.getElementById('room-status-text');
+            if(status && status.state === 'online') {
+                statusText.textContent = "Active Now";
+                statusText.style.color = "var(--success)";
+            } else {
+                statusText.textContent = "Offline";
+                statusText.style.color = "#888";
+            }
+        });
+    }
+
+    // ৬. মেসেজ লোড করা এবং টাইপিং ইন্ডিকেটর চালু করা
+    subscribeToChatMessages(currentChatId);
+
+    const typingRef = ref(rtdb, `typing/${currentChatId}`);
+    onValue(typingRef, (snap) => {
+        const typingData = snap.val();
+        const indicator = document.getElementById('typing-indicator');
+        let isTyping = false;
+        if(typingData) {
+            Object.keys(typingData).forEach(key => {
+                if(key !== currentUser.uid && typingData[key]) isTyping = true;
+            });
+        }
+        if(isTyping) indicator.classList.remove('hidden');
+        else indicator.classList.add('hidden');
+        scrollToBottomChat();
+    });
+
+    // ৭. টাইপিং হ্যান্ডলার
+    const input = document.getElementById('chat-msg-input');
+    input.oninput = () => {
+        update(ref(rtdb, `typing/${currentChatId}`), { [currentUser.uid]: true });
+        if(typingTimeout) clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            update(ref(rtdb, `typing/${currentChatId}`), { [currentUser.uid]: false });
+        }, 2000);
+    };
+}
+
+        window.backToChatList = function() {
+            document.getElementById('chat-room-view').classList.add('hidden');
+            document.getElementById('chat-list-view').classList.remove('hidden');
+            if(chatListener) {
+                // Detach would be good here but simpler to just overwrite on next open
+            }
+            currentChatId = null;
+        }
+
+        function subscribeToChatMessages(chatId) {
+            const list = document.getElementById('messages-list');
+            list.innerHTML = ''; // Clear previous messages
+            
+            // Determine path: community goes to messages/community, private goes to messages/private/{chatId}
+            const path = chatId === 'community' ? 'messages/community' : `messages/private/${chatId}`;
+            const chatRef = ref(rtdb, path);
+
+            // Detach previous listener if exists logic could be added here
+            
             onChildAdded(chatRef, (snapshot) => {
                 const msg = snapshot.val();
                 if (msg.isPinned) updatePinnedUI(msg, snapshot.key);
                 renderMessage(snapshot.key, msg);
                 scrollToBottomChat();
-                updateUnreadBadge(msg.timestamp);
             });
+
             onChildChanged(chatRef, (snapshot) => {
                  const msg = snapshot.val();
                  if (msg.isPinned) updatePinnedUI(msg, snapshot.key);
@@ -1757,13 +2054,10 @@
                      pinnedMessageId = null;
                  }
             });
+            
             onChildRemoved(chatRef, (snapshot) => {
                 const msgEl = document.getElementById(`msg-${snapshot.key}`);
-                if(msgEl) {
-                    msgEl.style.transition = 'opacity 0.3s';
-                    msgEl.style.opacity = '0';
-                    setTimeout(() => msgEl.remove(), 300);
-                }
+                if(msgEl) msgEl.remove();
             });
         }
 
@@ -1779,17 +2073,6 @@
             if(pinnedMessageId) document.getElementById(`msg-${pinnedMessageId}`).scrollIntoView({behavior: "smooth"});
         }
 
-        function updateUnreadBadge(msgTime) {
-            if(document.getElementById('view-chat').classList.contains('hidden')) {
-                const lastSeen = localStorage.getItem('lastSeenChat') || 0;
-                if(msgTime > lastSeen) {
-                    const badge = document.getElementById('chat-unread-badge');
-                    badge.textContent = Number(badge.textContent) + 1;
-                    badge.style.display = 'block';
-                }
-            }
-        }
-
         function markChatRead() {
             localStorage.setItem('lastSeenChat', Date.now());
             const badge = document.getElementById('chat-unread-badge');
@@ -1800,16 +2083,23 @@
         function createMessageHTML(key, msg) {
             const isMe = msg.uid === currentUser.uid;
             const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Avatar for other user messages
+            const avatarHtml = !isMe ? `<img src="${msg.pic || 'https://via.placeholder.com/30'}" class="msg-avatar-small" onclick="router('profile', null, '${msg.uid}')">` : '';
 
             return `
-                <div id="msg-${key}" class="msg ${isMe ? 'mine' : 'others'} ${msg.isAdmin ? 'admin-msg' : ''}">
-                    ${msg.isAdmin ? '<small class="text-primary font-bold">Admin</small>' : `<small class="text-primary font-bold" style="color:var(--primary)">${msg.name}</small>`}
-                    ${msg.replyTo ? `<div style="font-size:0.75rem; background:rgba(0,0,0,0.05); padding:4px; border-left:2px solid var(--primary); margin-bottom:4px;"><b>${msg.replyTo.name}</b>: ${msg.replyTo.text.substring(0,20)}...</div>` : ''}
-                    ${msg.type === 'image' ? `<img src="${msg.text}" style="max-width:100%; border-radius:8px; margin-top:5px;">` : `<span>${msg.text}</span>`}
+                <div id="msg-${key}" class="msg-bubble ${isMe ? 'mine' : 'others'}" style="${msg.isAdmin ? 'border: 2px solid var(--accent);' : ''}">
+                    ${avatarHtml}
+                    ${!isMe ? `<span class="msg-name">${msg.name} ${msg.isAdmin ? '<i class="fas fa-crown text-accent"></i>' : ''}</span>` : ''}
+                    
+                    ${msg.replyTo ? `<div class="msg-reply-bar"><b>${msg.replyTo.name}</b>: ${msg.replyTo.text.substring(0,20)}...</div>` : ''}
+                    
+                    ${msg.type === 'image' ? `<img src="${msg.text}" style="max-width:100%; border-radius:8px; margin-top:5px; cursor:pointer;" onclick="window.open('${msg.text}')">` : `<span>${msg.text}</span>`}
+                    
                     <div class="msg-meta">
-                        <i class="fas fa-reply msg-action-btn" onclick="setReply('${key}', '${msg.name}', '${msg.type === 'image' ? 'Image' : msg.text.replace(/'/g, "\\'")}')"></i>
-                        ${isMe ? `<i class="fas fa-trash msg-action-btn" onclick="deleteMessage('${key}')"></i>` : ''}
-                        ${isAdmin ? `<i class="fas fa-thumbtack msg-action-btn" onclick="pinMessage('${key}')"></i>` : ''}
+                        ${isMe ? `<i class="fas fa-trash" style="cursor:pointer;" onclick="deleteMessage('${key}')"></i>` : ''}
+                        <i class="fas fa-reply" style="cursor:pointer;" onclick="setReply('${key}', '${msg.name}', '${msg.type === 'image' ? 'Image' : msg.text.replace(/'/g, "\\'")}')"></i>
+                        ${isAdmin ? `<i class="fas fa-thumbtack" style="cursor:pointer;" onclick="pinMessage('${key}')"></i>` : ''}
                         <span>${time}</span>
                     </div>
                 </div>
@@ -1821,19 +2111,71 @@
         }
 
         function scrollToBottomChat() {
-            const list = document.getElementById('messages-list');
+            const list = document.getElementById('messages-container');
             list.scrollTop = list.scrollHeight;
         }
 
         window.sendChat = async () => {
+            if(!currentChatId) return;
             const input = document.getElementById('chat-msg-input');
             const text = input.value;
             if(!text) return;
-            const msgData = { text, type: 'text', uid: currentUser.uid, name: userData.name || "User", isAdmin, timestamp: Date.now() };
+
+            const msgData = { 
+                text, 
+                type: 'text', 
+                uid: currentUser.uid, 
+                name: userData.name || "User", 
+                pic: userData.profileImage || "",
+                isAdmin, 
+                timestamp: Date.now() 
+            };
+            
             if(replyData) msgData.replyTo = replyData;
-            await push(ref(rtdb, 'messages'), msgData);
+
+            const path = currentChatId === 'community' ? 'messages/community' : `messages/private/${currentChatId}`;
+            await push(ref(rtdb, path), msgData);
+
+            // Update Inbox info for private chats
+            if(currentChatId !== 'community') {
+                updateInboxInfo(currentChatId, text);
+            }
+
             input.value = '';
             cancelReply();
+        }
+
+        async function updateInboxInfo(chatId, lastMsgText) {
+            const uids = chatId.split('_');
+            const otherUid = uids[0] === currentUser.uid ? uids[1] : uids[0];
+            
+            // Get other user data just in case
+            let otherName = "User";
+            let otherPic = "";
+            
+            // Update My Inbox
+            // We need other user's name/pic for my inbox view
+            // This is simplified; ideally fetch from DB once. 
+            // Here assuming we are inside openChatRoom so we have name in header
+            const headerName = document.getElementById('room-name-text').textContent;
+            const headerPic = document.getElementById('room-avatar-img').src;
+
+            await update(ref(rtdb, `user_chats/${currentUser.uid}/${otherUid}`), {
+                lastMsg: lastMsgText,
+                timestamp: Date.now(),
+                name: headerName,
+                pic: headerPic,
+                uid: otherUid
+            });
+
+            // Update Other's Inbox (So they see me)
+            await update(ref(rtdb, `user_chats/${otherUid}/${currentUser.uid}`), {
+                lastMsg: lastMsgText,
+                timestamp: Date.now(),
+                name: userData.name,
+                pic: userData.profileImage || "",
+                uid: currentUser.uid
+            });
         }
 
         // Handle Image Pre-send Modal
@@ -1851,13 +2193,25 @@
         }
 
         window.confirmSendImage = async () => {
-            if(!tempChatImage) return;
+            if(!tempChatImage || !currentChatId) return;
             closeModal('modal-chat-image-preview');
             showToast("Uploading Image...");
             const url = await uploadToImgBB(tempChatImage);
             if(url) {
-                const msgData = { text: url, type: 'image', uid: currentUser.uid, name: userData.name || "User", isAdmin, timestamp: Date.now() };
-                await push(ref(rtdb, 'messages'), msgData);
+                const msgData = { 
+                    text: url, 
+                    type: 'image', 
+                    uid: currentUser.uid, 
+                    name: userData.name || "User", 
+                    pic: userData.profileImage || "",
+                    isAdmin, 
+                    timestamp: Date.now() 
+                };
+                
+                const path = currentChatId === 'community' ? 'messages/community' : `messages/private/${currentChatId}`;
+                await push(ref(rtdb, path), msgData);
+
+                if(currentChatId !== 'community') updateInboxInfo(currentChatId, "Sent an image");
             } else {
                 showToast("Upload Failed");
             }
@@ -1867,7 +2221,8 @@
 
         window.pinMessage = async (key) => {
             if(!confirm("Pin this message?")) return;
-            await update(ref(rtdb, `messages/${key}`), { isPinned: true });
+            const path = currentChatId === 'community' ? 'messages/community' : `messages/private/${currentChatId}`;
+            await update(ref(rtdb, `${path}/${key}`), { isPinned: true });
         }
 
         window.setReply = (msgKey, name, text) => {
@@ -1885,7 +2240,8 @@
         window.deleteMessage = async (key) => {
             if(!confirm("Delete this message?")) return;
             try {
-                await remove(ref(rtdb, `messages/${key}`));
+                const path = currentChatId === 'community' ? 'messages/community' : `messages/private/${currentChatId}`;
+                await remove(ref(rtdb, `${path}/${key}`));
                 const msgEl = document.getElementById(`msg-${key}`);
                 if(msgEl) msgEl.remove();
                 showToast("Message deleted");
@@ -1943,11 +2299,7 @@
         window.loadNotifications = () => { setupNotificationListener(); }
 
         window.markAllNotificationsRead = () => {
-            // This is a UI simulation since we rely on localStorage
             const list = document.getElementById('notification-list');
-            Array.from(list.children).forEach(child => {
-                 // In a real app, logic would be deeper, here we rely on user clicking individually or just visually clearing badge
-            });
             document.getElementById('notif-badge').style.display = 'none';
             showToast("All marked as read");
         }
@@ -2067,9 +2419,6 @@
             const balance = totalInc - totalExp;
             document.getElementById('chart-balance').textContent = balance + '৳';
             
-            // Calculate percentage for conic-gradient
-            // Start Green (Income), End Red (Expense)
-            // If total = Inc + Exp.
             const totalVolume = totalInc + totalExp;
             let incPct = 100;
             if(totalVolume > 0) {
@@ -2077,8 +2426,6 @@
             }
             
             const chart = document.getElementById('admin-pie-chart');
-            // Using primary var directly won't work in JS for dynamic gradient string easily unless computed
-            // Hardcoding colors matching CSS vars for simplicity in this logic block
             const cGreen = '#11998e';
             const cRed = '#ff4b4b';
             chart.style.background = `conic-gradient(${cGreen} 0% ${incPct}%, ${cRed} ${incPct}% 100%)`;
