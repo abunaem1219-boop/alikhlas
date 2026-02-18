@@ -4,49 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>আল ইখলাছ | Al Ikhlas Organization</title>
-    <!-- Google Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Hind Siliguri for Bengali, Poppins for English -->
+    <link href="https://fonts.googleapi.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            /* Light Mode (Default) */
-            --primary: #1b5e20;
-            --primary-light: #4c8c4a;
-            --accent: #fbc02d;
-            --bg-light: #f5f7fa;
+            /* Premium Gradient Theme */
+            --primary-gradient: linear-gradient(135deg, #11998e, #38ef7d);
+            --primary: #11998e;
+            --primary-light: #38ef7d;
+            
+            --accent: #FFD700; /* Gold for accents */
+            --danger: #ff4b4b;
+            --success: #00b894;
+            
+            /* Glassmorphism Backgrounds */
+            --bg-light: #f0f2f5;
             --bg-dark: #121212;
-            --surface-light: #ffffff;
-            --surface-dark: #1e1e1e;
-            --text-light: #333333;
-            --text-dark: #e0e0e0;
-            --shadow: 0 10px 30px -10px rgba(0,0,0,0.1); 
+            
+            --glass-surface: rgba(255, 255, 255, 0.75);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+            --glass-blur: blur(12px);
+            
+            --text-light: #2d3436;
+            --text-dark: #dfe6e9;
+            
+            /* Soft Shadow */
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); 
             --radius: 20px;
-            --danger: #d32f2f;
-            --success: #2e7d32;
         }
 
         /* DARK MODE OVERRIDES */
         html.dark-mode {
-            --bg-light: #18191a;  
-            --surface-light: #242526; 
+            --bg-light: #0f0f10;  
+            --glass-surface: rgba(30, 30, 30, 0.75);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
             --text-light: #e4e6eb;
-            --shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
-        html.dark-mode .card { border: 1px solid rgba(255,255,255,0.05); }
-        html.dark-mode header { background: var(--primary); } 
-        html.dark-mode .nav-bar { background: #242526; border-top: 1px solid #3e4042; }
-        html.dark-mode .msg.others { background: #3a3b3c; color: #e4e6eb; }
-        html.dark-mode .msg.mine { background: #0084ff; color: white; }
-        html.dark-mode input, html.dark-mode select, html.dark-mode textarea { background: #3a3b3c; color: white; border: 1px solid #3e4042; }
-        html.dark-mode #messages-list { background: #18191a; }
-        html.dark-mode .skeleton { background: linear-gradient(90deg, #2c2c2c, #3a3b3c, #2c2c2c); }
-
-        /* RESET & BASE */
+        /* GLOBAL RESET & BASE */
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Poppins', 'Noto Sans Bengali', sans-serif; background-color: var(--bg-light); color: var(--text-light); transition: background-color 0.3s, color 0.3s; padding-bottom: 80px; }
-        
+        body { 
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif; 
+            background-color: var(--bg-light); 
+            background-image: radial-gradient(circle at 10% 20%, rgba(56, 239, 125, 0.05) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(17, 153, 142, 0.05) 0%, transparent 20%);
+            background-attachment: fixed;
+            color: var(--text-light); 
+            transition: background-color 0.3s, color 0.3s; 
+            padding-bottom: 70px; /* Reduced padding for compact nav */
+        }
+
         /* UTILITIES */
         .hidden { display: none !important; }
         .flex { display: flex; }
@@ -60,254 +69,309 @@
         .text-accent { color: var(--accent); }
         .text-red { color: var(--danger); }
         .text-green { color: var(--success); }
-        
-        /* CARD DESIGN */
+
+        /* GLASS CARD DESIGN */
         .card { 
-            background: var(--surface-light); 
+            background: var(--glass-surface);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
             border-radius: var(--radius); 
-            padding: 1.2rem; 
+            padding: 1rem; 
             box-shadow: var(--shadow); 
-            margin-bottom: 1rem; 
-            border: 1px solid rgba(0,0,0,0.02); 
+            margin-bottom: 0.8rem; /* More compact */
             position: relative; 
-            transition: transform 0.2s, background-color 0.3s; 
+            transition: transform 0.2s, box-shadow 0.3s; 
         }
         .card:active { transform: scale(0.98); }
-        
+
         /* HEADER & MENU */
         header { 
-            background: linear-gradient(135deg, var(--primary), #0d3b10); 
-            color: white; padding: 1rem; position: sticky; top: 0; z-index: 50; 
+            background: var(--primary-gradient); 
+            color: white; 
+            padding: 0.8rem 1rem; 
+            position: sticky; top: 0; z-index: 50; 
             display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
-        header h1 { font-size: 1.2rem; font-weight: 700; }
-        
-        /* UPDATED: Added position relative to parent for notification dot */
+        header h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; }
+
         .header-menu-btn { cursor: pointer; padding: 5px; font-size: 1.2rem; position: relative; }
-        
-        .dropdown-menu { position: absolute; top: 50px; right: 10px; background: var(--surface-light); color: var(--text-light); border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); width: 200px; display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: 1px solid rgba(0,0,0,0.1); }
+        .dropdown-menu { position: absolute; top: 50px; right: 10px; background: var(--glass-surface); backdrop-filter: var(--glass-blur); color: var(--text-light); border-radius: 12px; box-shadow: var(--shadow); width: 200px; display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: var(--glass-border); }
         .dropdown-menu.show { display: flex; animation: slideDown 0.2s ease; }
         .dropdown-item { padding: 12px 15px; cursor: pointer; font-size: 0.9rem; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; transition: 0.2s; }
         .dropdown-item:hover { background: rgba(0,0,0,0.05); }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* AUTH SCREEN */
-        #auth-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; background: linear-gradient(135deg, var(--primary), #003300); }
-        .auth-box { background: white; padding: 2rem; border-radius: var(--radius); width: 100%; max-width: 400px; text-align: center; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        #auth-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; background: var(--primary-gradient); }
+        .auth-box { background: white; padding: 2rem; border-radius: var(--radius); width: 100%; max-width: 400px; text-align: center; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         
+        /* Auth Help Link */
+        .auth-help-link {
+            color: white;
+            text-decoration: underline;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
         /* FORM ELEMENTS */
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-family: inherit; background: var(--surface-light); color: var(--text-light); transition: 0.3s; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1); }
-        
-        button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; margin-top: 10px; }
-        button:active { transform: scale(0.98); }
-        button.secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; font-family: inherit; background: rgba(255,255,255,0.5); color: var(--text-light); transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 239, 125, 0.2); background: #fff; }
+
+        button { background: var(--primary-gradient); color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button:active { transform: scale(0.97); }
+        button.secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); box-shadow: none; }
         button.danger { background: var(--danger); color: white; border: none; }
         button.small-btn { width: auto; padding: 6px 12px; font-size: 0.8rem; }
-        
-        /* NAVIGATION */
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-light); display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 100; transition: background-color 0.3s; border-radius: 20px 20px 0 0; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; color: #888; cursor: pointer; position: relative; }
-        .nav-item.active { color: var(--primary); font-weight: 600; }
-        .nav-item i { font-size: 1.3rem; margin-bottom: 4px; }
-        
-        /* BADGES (Fixed Position) */
-        .red-dot { position: absolute; top: -5px; right: -5px; width: 10px; height: 10px; background: red; border-radius: 50%; border: 2px solid white; display: none; }
-        .red-dot.visible { display: block; }
-        .badge-count { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; display: none; }
 
-        /* DASHBOARD GRID */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; }
-        .stat-card { background: var(--surface-light); padding: 1rem; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); border-left: 4px solid var(--accent); transition: transform 0.2s; }
-        .stat-card:active { transform: scale(0.98); }
-        .stat-val { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 0.75rem; color: #888; }
-        
-        /* PROGRESS BAR */
-        .progress-container { width: 100%; background-color: #e0e0e0; border-radius: 10px; margin: 10px 0; height: 8px; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: var(--primary); width: 0%; transition: width 0.5s ease-in-out; }
+        /* NAVIGATION (Compact) */
+        .nav-bar { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: var(--glass-surface); 
+            backdrop-filter: blur(15px);
+            display: flex; justify-content: space-around; 
+            padding: 8px 0; /* Reduced padding */
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05); 
+            z-index: 100; border-top: var(--glass-border); 
+            border-radius: 20px 20px 0 0; 
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #999; cursor: pointer; position: relative; transition: 0.3s; }
+        .nav-item.active { color: var(--primary); font-weight: 600; transform: translateY(-2px); }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
+
+        /* BADGES */
+        .red-dot { position: absolute; top: -2px; right: 5px; width: 8px; height: 8px; background: red; border-radius: 50%; border: 1px solid white; display: none; }
+        .red-dot.visible { display: block; }
+        .badge-count { position: absolute; top: -5px; right: 0px; background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 5px; border-radius: 10px; display: none; }
+
+        /* DASHBOARD GRID (Compact) */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.8rem; }
+        .stat-card { 
+            background: var(--glass-surface); padding: 0.8rem; border-radius: var(--radius); 
+            text-align: center; border: var(--glass-border);
+            border-left: 3px solid var(--accent); transition: transform 0.2s; 
+        }
+        .stat-val { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.7rem; color: #888; }
+
+        /* CIRCULAR PROGRESS BAR */
+        .circular-progress {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto;
+        }
+        .circular-progress svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .circular-progress circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+        .progress-bg { stroke: rgba(0,0,0,0.05); }
+        .progress-val { stroke: var(--primary); transition: stroke-dashoffset 1s ease; }
+        .progress-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 0.75rem; font-weight: bold; color: var(--text-light);
+        }
+
+        /* NOTICE CAROUSEL (Swipeable) */
+        #notice-list {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 10px;
+            padding-bottom: 10px;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        #notice-list::-webkit-scrollbar { display: none; }
+        .notice-card {
+            flex: 0 0 85%; /* Shows part of next card */
+            scroll-snap-align: center;
+            min-height: 120px;
+            display: flex; flex-direction: column;
+            max-height: 300px;
+            overflow-y: auto; /* Internal scroll for long text */
+        }
 
         /* BLOOD SECTION */
-        .blood-card { position: relative; }
-        .blood-badge { position: absolute; top: 10px; right: 10px; padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; color: white; }
-        .badge-Urgent { background: var(--danger); }
-        .badge-Pending { background: #ff9800; color: white; }
-        .badge-Completed { background: var(--primary); }
+        .blood-card { position: relative; overflow: hidden; }
+        .blood-badge { position: absolute; top: 10px; right: 10px; padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .badge-Urgent { background: var(--danger); animation: pulse 1.5s infinite; }
+        .badge-Pending { background: #ff9800; color: white; animation: pulse 2s infinite; }
+        .badge-Completed { background: var(--success); }
         .badge-Expired { background: #757575; color: white; }
-        .blood-group { width: 50px; height: 50px; background: #ffebee; color: var(--danger); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; float: left; margin-right: 15px; }
 
-        /* CHAT SYSTEM */
-        #chat-container { height: calc(100vh - 140px); display: flex; flex-direction: column; position: relative; }
-        #pinned-message-container { background: var(--surface-light); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 8px 12px; font-size: 0.8rem; display: none; align-items: center; justify-content: space-between; color: var(--primary); cursor: pointer; }
-        #messages-list { flex: 1; overflow-y: auto; padding: 15px; background: #e5ddd5; border-radius: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; transition: background 0.3s; }
-        .msg { max-width: 75%; padding: 8px 12px; border-radius: 12px; position: relative; font-size: 0.9rem; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .msg.mine { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 0; color: #333; }
-        .msg.others { background: white; align-self: flex-start; border-bottom-left-radius: 0; color: #333; }
+        /* Droplet Shape */
+        .blood-group { 
+            width: 45px; height: 45px; 
+            background: linear-gradient(135deg, #ff4b4b, #d32f2f); 
+            color: white; 
+            border-radius: 0 50% 50% 50%; /* Droplet */
+            transform: rotate(45deg);
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: 700; font-size: 1rem; 
+            float: left; margin-right: 15px; margin-top: 5px; margin-left: 5px;
+            box-shadow: 2px 2px 5px rgba(211, 47, 47, 0.4);
+        }
+        .blood-group span { transform: rotate(-45deg); } /* Fix text rotation */
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(255, 75, 75, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); }
+        }
+
+        /* CHAT SYSTEM (Modern) */
+        #chat-container { height: calc(100vh - 130px); display: flex; flex-direction: column; position: relative; }
+        #messages-list { 
+            flex: 1; overflow-y: auto; padding: 15px; 
+            background-color: var(--bg-light);
+            background-image: radial-gradient(var(--text-light) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.95;
+            border-radius: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; 
+        }
+        .msg { max-width: 75%; padding: 10px 14px; border-radius: 18px; position: relative; font-size: 0.9rem; word-wrap: break-word; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .msg.mine { 
+            background: var(--primary-gradient); 
+            align-self: flex-end; 
+            border-bottom-right-radius: 4px; 
+            color: white; 
+        }
+        .msg.others { 
+            background: white; 
+            align-self: flex-start; 
+            border-bottom-left-radius: 4px; 
+            color: #333; 
+        }
         .msg.admin-msg { border: 2px solid var(--accent); }
         .msg-meta { font-size: 0.65rem; opacity: 0.7; text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 10px; align-items: center;}
-        .msg-action-btn { cursor: pointer; opacity: 0.6; transition: opacity 0.2s, transform 0.2s; }
-        .msg-action-btn:hover { opacity: 1; transform: scale(1.1); }
-        .msg-action-btn:active { transform: scale(0.95); }
+        html.dark-mode .msg.others { background: #3a3b3c; color: white; }
+
+        /* FLOATING ACTION BUTTON (FAB) */
+        .fab-container { position: fixed; bottom: 80px; right: 20px; z-index: 90; display: flex; flex-direction: column-reverse; gap: 10px; align-items: flex-end; }
+        .fab-main {
+            width: 55px; height: 55px; border-radius: 50%;
+            background: var(--primary-gradient); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; box-shadow: 0 4px 15px rgba(0,255,100,0.3);
+            cursor: pointer; transition: transform 0.3s;
+        }
+        .fab-main:active { transform: scale(0.9); }
+        .fab-menu { display: none; flex-direction: column; gap: 10px; align-items: flex-end; }
+        .fab-menu.show { display: flex; animation: slideUp 0.3s; }
+        .fab-item {
+            background: white; color: var(--text-light); padding: 8px 15px; border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.8rem; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+        html.dark-mode .fab-item { background: #333; color: white; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ADMIN PIE CHART */
+        .pie-chart {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: conic-gradient(var(--primary) 0% 50%, var(--danger) 50% 100%);
+            margin: 20px auto; position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+        .pie-hole {
+            width: 100px; height: 100px; background: var(--bg-light); border-radius: 50%;
+            position: absolute; top: 25px; left: 25px;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; font-size: 0.8rem; font-weight: bold;
+        }
+
+        /* SKELETON LOADER (Shimmer) */
+        .skeleton { 
+            background: #eee;
+            background-image: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            background-size: 200% 100%;
+            animation: shimmer 1s linear infinite;
+            border-radius: 8px; color: transparent !important; cursor: default;
+        }
+        html.dark-mode .skeleton { background: #333; background-image: linear-gradient(110deg, #2c2c2c 8%, #3a3a3a 18%, #2c2c2c 33%); }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         
-        /* CHAT EXTRAS */
-        .chat-input-area { display: flex; gap: 8px; flex-direction: column; }
-        .input-row { display: flex; gap: 8px; }
-        .reply-context { font-size: 0.75rem; background: rgba(0,0,0,0.05); padding: 4px 8px; border-left: 3px solid var(--primary); border-radius: 4px; margin-bottom: 4px; opacity: 0.8; }
-        #reply-preview-bar { display: none; background: rgba(0,0,0,0.05); padding: 8px; border-left: 4px solid var(--accent); font-size: 0.8rem; justify-content: space-between; align-items: center; margin-bottom: 5px; border-radius: 8px; }
+        /* EMPTY STATE ICON */
+        .empty-state { text-align: center; padding: 2rem; opacity: 0.6; }
+        .empty-state i { font-size: 3rem; margin-bottom: 10px; color: #ccc; }
 
-        /* NOTIFICATIONS */
-        .notification-item { background: var(--surface-light); padding: 12px; border-radius: 12px; margin-bottom: 8px; border-left: 4px solid #ddd; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
-        .notification-item.unread { border-left-color: var(--primary); background: rgba(27, 94, 32, 0.05); }
-        .notif-content h5 { font-size: 0.9rem; margin-bottom: 2px; }
-        .notif-content p { font-size: 0.75rem; color: #666; }
-
-        /* TOGGLE SWITCH */
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; margin-left: 10px; }
+        /* OTHER UTILS */
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; margin-left: 10px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider:before { transform: translateX(18px); }
 
-        /* SKELETON LOADER */
-      /* SKELETON LOADER UPDATED */
-        .skeleton { 
-            background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%); 
-            background-size: 200% 100%; 
-            animation: shimmer 1.5s infinite; 
-            border-radius: 8px; 
-            color: transparent !important; /* টেক্সট হাইড করার জন্য */
-            cursor: default;
-        }
-        .skeleton-text { height: 1em; margin-bottom: 5px; width: 80%; background-color: #eee; border-radius: 4px; }
-        .skeleton-circle { width: 50px; height: 50px; border-radius: 50%; background-color: #eee; }
-        .skeleton-box { height: 80px; width: 100%; border-radius: 12px; }
-        
-        @keyframes shimmer { 
-            0% { background-position: -200% 0; } 
-            100% { background-position: 200% 0; } 
-        }
-        /* ADMIN & MODALS */
-        .admin-only { display: none; }
-        body.is-admin .admin-only { display: block; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        .modal-content { background: var(--surface-light); padding: 25px; border-radius: var(--radius); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; color: var(--text-light); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        /* Modal Updates */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--glass-surface); border: var(--glass-border); padding: 25px; border-radius: var(--radius); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; color: var(--text-light); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
 
-        /* ONBOARDING */
-        .onboarding-overlay { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 2000; background: rgba(0,0,0,0.8); display:flex; flex-direction: column; justify-content: center; align-items: center; color: white; padding: 20px; text-align: center; }
-        .onboarding-step { display: none; animation: fadeIn 0.5s; }
-        .onboarding-step.active { display: block; }
-        .onboarding-img { width: 80%; max-width: 200px; margin-bottom: 20px; }
-
-        /* LOAD MORE */
-        .load-more-btn { background: transparent; color: #888; border: 1px solid #ddd; margin: 10px auto; display: block; width: auto; }
-        
-        /* STATUS DOTS */
-        .status-dot { height: 10px; width: 10px; background-color: #bbb; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .status-dot.online { background-color: var(--success); }
-
-        /* USER MANAGEMENT STYLES */
-        .user-mgmt-card { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            padding: 12px; 
-            background: var(--surface-light); 
-            border-radius: 12px; 
-            margin-bottom: 10px; 
-            box-shadow: var(--shadow); 
-            transition: transform 0.2s; 
-        }
-        .user-mgmt-card:hover { transform: translateX(5px); }
-        .user-mgmt-avatar { 
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            background: #e0e0e0; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.5rem; 
-            color: #999; 
-        }
+        /* User Mgmt Styles (Preserved) */
+        .user-mgmt-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--glass-surface); border: var(--glass-border); border-radius: 12px; margin-bottom: 10px; box-shadow: var(--shadow); transition: transform 0.2s; }
+        .user-mgmt-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #999; }
         .user-mgmt-info { flex: 1; }
-        .user-mgmt-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
-        .user-mgmt-email { font-size: 0.75rem; opacity: 0.7; }
-        .user-mgmt-meta { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
-        .user-badge { 
-            font-size: 0.7rem; 
-            padding: 2px 8px; 
-            border-radius: 10px; 
-            font-weight: 600; 
-        }
-        .badge-admin { background: var(--primary); color: white; }
-        .badge-moderator { background: #ff9800; color: white; }
-        .badge-member { background: #2196F3; color: white; }
-        .badge-donor { background: #E91E63; color: white; }
-        .badge-active { background: #4CAF50; color: white; }
-        .badge-blocked { background: #f44336; color: white; }
-        .user-mgmt-actions { display: flex; gap: 8px; }
-        .action-icon-btn { 
-            background: none; 
-            border: none; 
-            font-size: 1.1rem; 
-            cursor: pointer; 
-            padding: 6px 10px; 
-            border-radius: 8px; 
-            transition: all 0.2s; 
-            width: auto; 
-            margin: 0;
-        }
-        .action-icon-btn:hover { background: rgba(0,0,0,0.05); transform: scale(1.1); }
-        .action-icon-btn:active { transform: scale(0.95); }
-        .search-filter-bar { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 15px; 
-            flex-wrap: wrap; 
-        }
-        .search-filter-bar input, .search-filter-bar select { 
-            flex: 1; 
-            min-width: 150px; 
-            margin: 0; 
-        }
-        html.dark-mode .user-mgmt-card { background: #242526; border: 1px solid rgba(255,255,255,0.05); }
-        html.dark-mode .action-icon-btn:hover { background: rgba(255,255,255,0.1); }
+        .badge-admin { background: var(--primary); color: white; padding:2px 6px; border-radius:4px; font-size:0.7rem; }
+        .badge-blocked { background: var(--danger); color: white; padding:2px 6px; border-radius:4px; font-size:0.7rem; }
+        .action-icon-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; padding: 6px; box-shadow:none; width: auto; color: #666;}
+        
+        .reload-btn { font-size: 1rem; cursor: pointer; padding: 5px; animation: none; }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
     <!-- LOADING OVERLAY -->
-    <div id="global-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--surface-light); z-index:999; display:flex; justify-content:center; align-items:center;">
-        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+    <div id="global-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-light); z-index:999; display:flex; justify-content:center; align-items:center;">
+        <div class="spinner" style="border: 4px solid rgba(0,0,0,0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
     </div>
 
     <!-- ONBOARDING MODAL -->
-    <div id="onboarding-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-step active" id="step-1">
-            <i class="fas fa-hand-holding-heart" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px;"></i>
-            <h3>Welcome to Al Ikhlas</h3>
-            <p>Manage donations, find blood donors, and connect with your community.</p>
-            <button onclick="nextOnboarding(2)" style="margin-top: 20px; background: white; color: var(--primary);">Next</button>
-        </div>
-        <div class="onboarding-step" id="step-2">
-            <i class="fas fa-tint" style="font-size: 4rem; color: var(--danger); margin-bottom: 20px;"></i>
-            <h3>Blood Bank</h3>
-            <p>Request blood in emergencies or update your own eligibility status.</p>
-            <button onclick="nextOnboarding(3)" style="margin-top: 20px; background: white; color: var(--primary);">Next</button>
-        </div>
-        <div class="onboarding-step" id="step-3">
-            <i class="fas fa-comments" style="font-size: 4rem; color: #2196f3; margin-bottom: 20px;"></i>
-            <h3>Stay Connected</h3>
-            <p>Chat with members and get instant notifications on important updates.</p>
-            <button onclick="finishOnboarding()" style="margin-top: 20px; background: white; color: var(--primary);">Get Started</button>
+    <div id="onboarding-modal" class="modal hidden" style="z-index: 2000; background: rgba(0,0,0,0.9);">
+        <div class="modal-content text-center" style="background: white; color: #333;">
+            <div class="onboarding-step active" id="step-1">
+                <i class="fas fa-hand-holding-heart" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px;"></i>
+                <h3>Welcome to Al Ikhlas</h3>
+                <p>Manage donations, find blood donors, and connect with your community.</p>
+                <button onclick="nextOnboarding(2)" style="margin-top: 20px;">Next</button>
+            </div>
+            <div class="onboarding-step hidden" id="step-2">
+                <i class="fas fa-tint" style="font-size: 4rem; color: var(--danger); margin-bottom: 20px;"></i>
+                <h3>Blood Bank</h3>
+                <p>Request blood in emergencies or update your own eligibility status.</p>
+                <button onclick="nextOnboarding(3)" style="margin-top: 20px;">Next</button>
+            </div>
+            <div class="onboarding-step hidden" id="step-3">
+                <i class="fas fa-comments" style="font-size: 4rem; color: #2196f3; margin-bottom: 20px;"></i>
+                <h3>Stay Connected</h3>
+                <p>Chat with members and get instant notifications on important updates.</p>
+                <button onclick="finishOnboarding()" style="margin-top: 20px;">Get Started</button>
+            </div>
         </div>
     </div>
 
     <!-- AUTH SCREEN -->
     <div id="auth-screen" class="hidden">
+        <!-- Help Link Added -->
+        <a href="https://youtu.be/GLaForf5ltY?si=wtvDpxfc3dSqcprI" target="_blank" class="auth-help-link">
+            <i class="fas fa-question-circle"></i> কিভাবে রেজিস্ট্রেশন করবেন?
+        </a>
+
         <div class="auth-box">
             <h2 class="text-primary" style="margin-bottom:10px;">আল ইখলাছ</h2>
             <p style="margin-bottom:20px; font-size:0.9rem; color:#666;">Organization Management System v1.2</p>
@@ -322,7 +386,7 @@
                     <i class="fas fa-camera text-primary" style="font-size:2rem; cursor:pointer;" onclick="document.getElementById('reg-img').click()"></i>
                     <p style="font-size:0.7rem; color:#666;">Upload Photo</p>
                     <input type="file" id="reg-img" accept="image/*" class="hidden" onchange="previewRegImage(this)">
-                    <img id="reg-img-preview" src="" style="width:60px; height:60px; border-radius:50%; display:none; margin:0 auto;">
+                    <img id="reg-img-preview" src="" style="width:60px; height:60px; border-radius:50%; display:none; margin:0 auto; object-fit:cover;">
                 </div>
                 <input type="text" id="reg-name" placeholder="Full Name" required>
                 <input type="email" id="reg-email" placeholder="Email Address" required>
@@ -345,21 +409,25 @@
 
     <!-- MAIN APP INTERFACE -->
     <div id="app-interface" class="hidden">
-        
+
         <header>
             <h1><span data-i18n="app_title">আল ইখলাছ</span> <span id="user-role-badge" style="font-size:0.7rem; background:rgba(255,255,255,0.2); padding:2px 6px; border-radius:4px;">User</span></h1>
-            <div style="position:relative;">
-                <i class="fas fa-bell header-menu-btn" onclick="router('notifications', null)" style="margin-right: 10px;">
-                    <span id="notif-badge" class="badge-count">0</span>
-                </i>
+            <div style="display:flex; align-items:center;">
+                <!-- Reload Button added -->
+                <i id="btn-reload" class="fas fa-sync-alt reload-btn" onclick="manualReload()" style="margin-right:15px;"></i>
+
+                <div style="position:relative; margin-right: 15px;">
+                    <i class="fas fa-bell header-menu-btn" onclick="router('notifications', null)">
+                        <span id="notif-badge" class="badge-count">0</span>
+                    </i>
+                </div>
                 <i class="fas fa-ellipsis-v header-menu-btn" onclick="toggleMenu()"></i>
-                <!-- HEADER MENU (UPDATED) -->
+                
+                <!-- HEADER MENU -->
                 <div id="header-dropdown" class="dropdown-menu">
-                    <!-- Install App Link -->
                     <div class="dropdown-item" onclick="window.open('https://www.appcreator24.com/app3927201-hqxpye', '_blank')">
                         <i class="fas fa-download"></i> <span data-i18n="menu_install">Install App</span>
                     </div>
-                    <!-- Language Toggle -->
                     <div class="dropdown-item" onclick="toggleLanguage()">
                         <i class="fas fa-language"></i> <span id="lang-toggle-text">বাংলা</span>
                     </div>
@@ -370,78 +438,105 @@
                     </div>
                     <div class="dropdown-item" onclick="showOnboarding()"><i class="fas fa-question-circle"></i> <span data-i18n="menu_help">Help Guide</span></div>
                     <div class="dropdown-item text-red" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-i18n="menu_logout">Logout</span></div>
-                    <div style="padding:10px; font-size:0.7rem; color:#888; text-align:center;">App Version: v1.2.0</div>
+                    <div style="padding:10px; font-size:0.7rem; color:#888; text-align:center;">App Version: v1.3.0</div>
                 </div>
             </div>
         </header>
 
+        <!-- FLOATING ACTION BUTTON -->
+        <div class="fab-container">
+            <div class="fab-main" onclick="toggleFab()">
+                <i class="fas fa-plus" id="fab-icon"></i>
+            </div>
+            <div id="fab-menu" class="fab-menu">
+                <div class="fab-item" onclick="toggleFab(); router('chat', document.querySelector('.nav-item:nth-child(3)'))">
+                    <span>Chat</span> <i class="fas fa-comments text-primary"></i>
+                </div>
+                <div class="fab-item" onclick="toggleFab(); openModal('modal-blood')">
+                    <span>Blood</span> <i class="fas fa-tint text-red"></i>
+                </div>
+                <div class="fab-item" onclick="toggleFab(); copyDonation()">
+                    <span>Donate</span> <i class="fas fa-hand-holding-heart text-green"></i>
+                </div>
+            </div>
+        </div>
+
         <!-- VIEW: HOME -->
         <div id="view-home" class="section">
-            <!-- Stats -->
+            <!-- Stats Compact Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-val" id="stat-funds">0৳</div>
-                    <div class="stat-label" data-i18n="stat_collection">Total Collection</div>
+                    <div class="stat-label" data-i18n="stat_collection">Collection</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" style="border-color: var(--danger);">
                     <div class="stat-val text-red" id="stat-expense">0৳</div>
-                    <div class="stat-label" data-i18n="stat_expense">Total Expense</div>
+                    <div class="stat-label" data-i18n="stat_expense">Expense</div>
                 </div>
-                <div class="stat-card" style="border-left-color: var(--primary);">
-                    <div class="stat-val" id="stat-balance">0৳</div>
-                    <div class="stat-label" data-i18n="stat_balance">Current Balance</div>
+                <div class="stat-card" style="border-color: var(--success);">
+                    <div class="stat-val text-green" id="stat-balance">0৳</div>
+                    <div class="stat-label" data-i18n="stat_balance">Balance</div>
                 </div>
-                <div class="stat-card" onclick="router('members', null)" style="cursor:pointer; border-left-color: #888;">
+                <div class="stat-card" onclick="router('members', null)" style="cursor:pointer; border-color: #2196f3;">
                     <div class="stat-val" id="stat-members">0</div>
                     <div class="stat-label" data-i18n="stat_members">Members</div>
                 </div>
             </div>
 
-            <!-- Monthly Goal -->
-            <div class="card" style="padding: 10px 15px;">
-                <div class="flex justify-between" style="font-size: 0.8rem; margin-bottom: 5px;">
-                    <span data-i18n="monthly_target">Monthly Target</span>
-                    <span id="monthly-progress-text">0 / 0৳</span>
+            <!-- Circular Monthly Goal -->
+            <div class="card flex items-center justify-between" style="padding: 10px 15px;">
+                <div style="flex:1;">
+                    <h4 style="font-size: 0.9rem;" data-i18n="monthly_target">Monthly Target</h4>
+                    <p id="monthly-progress-text" style="font-size:0.8rem; color:#666; margin-top:5px;">0 / 0৳</p>
+                    <small class="admin-only text-primary" onclick="openModal('modal-target')" style="cursor:pointer; font-size: 0.7rem;" data-i18n="edit_target">Edit</small>
                 </div>
-                <div class="progress-container">
-                    <div id="monthly-progress-bar" class="progress-bar"></div>
+                <div class="circular-progress">
+                    <svg>
+                        <circle cx="35" cy="35" r="30" class="progress-bg"></circle>
+                        <circle cx="35" cy="35" r="30" class="progress-val" id="monthly-circle-bar" stroke-dasharray="188" stroke-dashoffset="188"></circle>
+                    </svg>
+                    <div class="progress-text" id="monthly-pct-text">0%</div>
                 </div>
-                <small class="admin-only text-primary" onclick="openModal('modal-target')" style="cursor:pointer; font-size: 0.7rem;" data-i18n="edit_target">Edit Target</small>
             </div>
 
             <!-- Donation Card -->
-            <div class="card" style="border-left: 4px solid green;">
+            <div class="card" style="border-left: 4px solid var(--success);">
                 <div class="flex justify-between items-center">
                     <h4 data-i18n="btn_donate">🤝 Donate Now</h4>
                     <i class="fas fa-edit admin-only text-primary" onclick="openModal('modal-donation-edit')" style="cursor:pointer;"></i>
                 </div>
-                <div class="donation-copy-box" style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border: 1px dashed var(--primary);">
+                <div class="donation-copy-box" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border: 1px dashed var(--primary);">
                     <span>
                         <i class="fas fa-wallet text-primary"></i> 
-                        <span id="display-donation-number">Loading...</span>
+                        <span id="display-donation-number" style="font-weight:600;">Loading...</span>
                     </span>
                     <i class="far fa-copy" onclick="copyDonation()" style="cursor:pointer; color:var(--primary);"></i>
                 </div>
-                <small style="opacity:0.7; display:block; margin-top:5px; text-align:center;">Send Money (bKash/Nagad)</small>
+                <small style="opacity:0.7; display:block; margin-top:5px; text-align:center; font-size:0.75rem;">Send Money (bKash/Nagad)</small>
             </div>
 
-            <h3 style="margin-bottom:10px;" data-i18n="header_notice">📌 Notice Board</h3>
-            <div class="admin-only" style="margin-bottom:10px;">
-                <button onclick="openModal('modal-notice')" class="secondary small-btn" data-i18n="btn_notice">+ Post Notice</button>
+            <div class="flex justify-between items-center" style="margin-bottom:10px; margin-top:15px;">
+                <h3 data-i18n="header_notice">📌 Notice Board</h3>
+                <div class="admin-only">
+                    <button onclick="openModal('modal-notice')" class="secondary small-btn" data-i18n="btn_notice">+ Notice</button>
+                </div>
             </div>
-            <div id="notice-list"></div>
-            <button id="btn-load-more-notice" class="load-more-btn hidden" onclick="loadMoreNotices()" data-i18n="btn_load_more">Load More</button>
+            
+            <!-- Horizontal Swipeable Notice List -->
+            <div id="notice-list">
+                <!-- Content Injected via JS -->
+            </div>
         </div>
 
         <!-- VIEW: BLOOD -->
         <div id="view-blood" class="section hidden">
             <h3 style="margin-bottom:10px;" data-i18n="header_blood">🩸 Blood Requests</h3>
-            
+
             <div class="flex gap-2" style="margin-bottom: 15px;">
                 <button onclick="openModal('modal-blood')" class="secondary w-full" data-i18n="btn_req_blood">+ Request Blood</button>
                 <button onclick="filterBloodEligible()" id="btn-filter-eligible" class="secondary w-full" style="border-color:#ccc; color:#666;" data-i18n="btn_eligible_only">Eligible Only</button>
             </div>
-            
+
             <div id="pending-blood-container" class="hidden">
                 <h4 class="text-accent" style="margin:10px 0;">⏳ Pending Approval</h4>
                 <div id="blood-pending-list"></div>
@@ -468,26 +563,28 @@
             <div id="members-list">
                 <div class="spinner"></div>
             </div>
-            <button id="btn-load-members" class="load-more-btn" onclick="loadMembers(true)" data-i18n="btn_load_more">Load More</button>
+            <button id="btn-load-members" class="load-more-btn secondary small-btn" style="margin: 10px auto; display:block;" onclick="loadMembers(true)" data-i18n="btn_load_more">Load More</button>
         </div>
 
         <!-- VIEW: CHAT -->
         <div id="view-chat" class="section hidden">
             <div id="chat-container">
-                <div id="pinned-message-container" onclick="scrollToPinned()">
-                    <div><i class="fas fa-thumbtack"></i> <span id="pinned-text-preview">Pinned Message</span></div>
-                    <i class="fas fa-chevron-down"></i>
+                <div id="pinned-message-container" style="background:var(--glass-surface); padding:8px; margin-bottom:5px; border-radius:10px; border:var(--glass-border); display:none; justify-content:space-between; align-items:center; cursor:pointer;" onclick="scrollToPinned()">
+                    <div style="font-size:0.8rem; color:var(--primary);"><i class="fas fa-thumbtack"></i> <span id="pinned-text-preview">Pinned Message</span></div>
+                    <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
                 </div>
+                
                 <div id="messages-list"></div>
-                <div class="chat-input-area">
-                    <div id="reply-preview-bar">
+                
+                <div class="chat-input-area" style="background:var(--glass-surface); padding:10px; border-radius:20px; border:var(--glass-border);">
+                    <div id="reply-preview-bar" style="display:none; font-size:0.75rem; color:#666; margin-bottom:5px; border-left:3px solid var(--primary); padding-left:8px; justify-content:space-between;">
                         <span>Replying to <b id="reply-to-name">Name</b></span>
-                        <i class="fas fa-times" onclick="cancelReply()" style="cursor:pointer;"></i>
+                        <i class="fas fa-times" onclick="cancelReply()"></i>
                     </div>
-                    <div class="input-row">
-                        <input type="text" id="chat-msg-input" placeholder="Type a message...">
-                        <button onclick="sendChat()" style="width:auto;"><i class="fas fa-paper-plane"></i></button>
-                        <button onclick="document.getElementById('chat-img-input').click()" style="width:auto; background:rgba(0,0,0,0.1); color:var(--text-light);"><i class="fas fa-image"></i></button>
+                    <div class="input-row" style="display:flex; gap:8px;">
+                        <input type="text" id="chat-msg-input" placeholder="Type..." style="margin:0; border:none;">
+                        <button onclick="sendChat()" style="width:auto; border-radius:50%; width:45px; height:45px; padding:0;"><i class="fas fa-paper-plane"></i></button>
+                        <button onclick="document.getElementById('chat-img-input').click()" style="width:auto; border-radius:50%; width:45px; height:45px; padding:0; background:#eee; color:#666;"><i class="fas fa-image"></i></button>
                         <input type="file" id="chat-img-input" accept="image/*" class="hidden" onchange="handleChatImageUpload(this)">
                     </div>
                 </div>
@@ -502,38 +599,53 @@
                 <small class="text-primary" onclick="markAllNotificationsRead()" style="cursor:pointer;">Mark all read</small>
             </div>
             <div id="notification-list">
-                <p class="text-center" style="margin-top:20px; color:#888;">No notifications</p>
+                <!-- Empty state handled in JS -->
             </div>
         </div>
 
         <!-- VIEW: ADMIN -->
         <div id="view-admin" class="section hidden">
             <h3 data-i18n="header_admin">🛠️ Admin Panel</h3>
+            
+            <!-- Pie Chart -->
+            <div class="card" style="text-align:center;">
+                <div id="admin-pie-chart" class="pie-chart">
+                    <div class="pie-hole">
+                        <span style="font-size:0.7rem; color:#888;">Balance</span>
+                        <span id="chart-balance" class="text-primary">0৳</span>
+                    </div>
+                </div>
+                <div class="flex justify-between" style="font-size:0.8rem; padding:0 20px;">
+                    <span class="text-primary"><i class="fas fa-circle"></i> Income</span>
+                    <span class="text-red"><i class="fas fa-circle"></i> Expense</span>
+                </div>
+            </div>
+
             <div class="stats-grid" style="margin-top:15px;">
-                <button onclick="checkAdminAndOpen('modal-fund')" class="stat-card" style="border-left-color:green; cursor:pointer;">
+                <button onclick="checkAdminAndOpen('modal-fund')" class="stat-card" style="border-color:var(--success); cursor:pointer;">
                     <i class="fas fa-hand-holding-dollar text-primary" style="font-size:1.5rem;"></i>
                     <div class="stat-label" style="margin-top:5px;" data-i18n="btn_add_fund">Add Collection</div>
                 </button>
-                <button onclick="checkAdminAndOpen('modal-expense')" class="stat-card" style="border-left-color:red; cursor:pointer;">
+                <button onclick="checkAdminAndOpen('modal-expense')" class="stat-card" style="border-color:var(--danger); cursor:pointer;">
                     <i class="fas fa-file-invoice-dollar text-red" style="font-size:1.5rem;"></i>
                     <div class="stat-label" style="margin-top:5px;" data-i18n="btn_add_expense">Add Expense</div>
                 </button>
-                <button onclick="checkAdminAndOpen('modal-admin-about')" class="stat-card" style="border-left-color:var(--primary); cursor:pointer;">
+                <button onclick="checkAdminAndOpen('modal-admin-about')" class="stat-card" style="border-color:var(--primary); cursor:pointer;">
                     <i class="fas fa-circle-info text-primary" style="font-size:1.5rem;"></i>
                     <div class="stat-label" style="margin-top:5px;">Edit About</div>
                 </button>
-                <button onclick="checkAdminAndOpen('modal-add-donor')" class="stat-card" style="border-left-color:var(--danger); cursor:pointer;">
+                <button onclick="checkAdminAndOpen('modal-add-donor')" class="stat-card" style="border-color:var(--accent); cursor:pointer;">
                     <i class="fas fa-droplet text-red" style="font-size:1.5rem;"></i>
                     <div class="stat-label" style="margin-top:5px;">Add Donor</div>
                 </button>
-                <button onclick="openUserManagement()" class="stat-card" style="border-left-color:#2196F3; cursor:pointer;">
+                <button onclick="openUserManagement()" class="stat-card" style="border-color:#2196F3; cursor:pointer;">
                     <i class="fas fa-users-cog text-primary" style="font-size:1.5rem; color:#2196F3 !important;"></i>
                     <div class="stat-label" style="margin-top:5px;">User Management</div>
                 </button>
             </div>
-            
+
             <div class="card">
-                <h4>Transaction History</h4>
+                <h4>History</h4>
                 <div id="fund-history-list" style="max-height:200px; overflow-y:auto; font-size:0.85rem;"></div>
             </div>
         </div>
@@ -545,22 +657,21 @@
                 <div id="profile-initial-display" style="width:100px; height:100px; background:#ddd; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#888;">
                     <i class="fas fa-user"></i>
                 </div>
-                
+
                 <h3 id="profile-name">Loading...</h3>
                 <span id="profile-blood-badge" style="background:#ffebee; color:var(--danger); padding:2px 8px; border-radius:12px; font-weight:bold; font-size:0.9rem;"></span>
-                
-                <!-- Availability Status -->
+
                 <div id="eligibility-container" style="margin: 10px 0;">
                     <span id="eligibility-badge" style="padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">Status Loading...</span>
                 </div>
 
                 <p id="profile-role" style="font-size:0.8rem; color:var(--primary); font-weight:600; margin-top:5px;"></p>
                 <p id="profile-joined" style="font-size:0.75rem; opacity:0.6;">Joined: ...</p>
-                
+
                 <div style="margin: 15px 0; border-top:1px solid rgba(0,0,0,0.1); padding-top:10px;">
                     <p id="profile-email" style="opacity:0.8; font-size:0.9rem; margin-bottom:5px;">...</p>
                     <p id="profile-address" style="opacity:0.8; font-size:0.9rem;">...</p>
-                    
+
                     <div id="profile-contact-actions" style="margin-top:15px; display:flex; justify-content:center; gap:15px;">
                         <a id="link-call" href="#" class="hidden" style="color:var(--primary); font-size:1.5rem;"><i class="fas fa-phone-square-alt"></i></a>
                         <a id="link-fb" href="#" target="_blank" class="hidden" style="color:#1877F2; font-size:1.5rem;"><i class="fab fa-facebook-square"></i></a>
@@ -571,7 +682,7 @@
             </div>
         </div>
 
-        <!-- BOTTOM NAV -->
+        <!-- BOTTOM NAV (Compact) -->
         <div class="nav-bar">
             <div class="nav-item active" onclick="router('home', this)">
                 <i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span>
@@ -601,52 +712,42 @@
                 <i class="fas fa-arrow-left"></i> Back
             </button>
         </div>
-
-        <!-- Search and Filter Bar -->
-        <div class="search-filter-bar">
-            <input type="text" id="user-search" placeholder="🔍 Search users..." oninput="filterUsers()">
-            <select id="role-filter" onchange="filterUsers()">
+        <div class="search-filter-bar" style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+            <input type="text" id="user-search" placeholder="🔍 Search users..." oninput="filterUsers()" style="margin:0;">
+            <select id="role-filter" onchange="filterUsers()" style="margin:0; width:auto;">
                 <option value="">All Roles</option>
                 <option value="admin">Admin</option>
-                <option value="moderator">Moderator</option>
                 <option value="member">Member</option>
-                <option value="donor">Donor</option>
             </select>
-            <select id="status-filter" onchange="filterUsers()">
+            <select id="status-filter" onchange="filterUsers()" style="margin:0; width:auto;">
                 <option value="">All Status</option>
                 <option value="active">Active</option>
                 <option value="blocked">Blocked</option>
             </select>
         </div>
-
-        <!-- User Stats Summary -->
         <div class="stats-grid" style="margin-bottom:15px;">
-            <div class="stat-card">
-                <div class="stat-val" id="total-users-count">0</div>
-                <div class="stat-label">Total Users</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val" id="active-users-count">0</div>
-                <div class="stat-label">Active</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val" id="blocked-users-count">0</div>
-                <div class="stat-label">Blocked</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val" id="admin-count">0</div>
-                <div class="stat-label">Admins</div>
-            </div>
+            <div class="stat-card"><div class="stat-val" id="total-users-count">0</div><div class="stat-label">Total</div></div>
+            <div class="stat-card"><div class="stat-val" id="active-users-count">0</div><div class="stat-label">Active</div></div>
+            <div class="stat-card"><div class="stat-val" id="blocked-users-count">0</div><div class="stat-label">Blocked</div></div>
+            <div class="stat-card"><div class="stat-val" id="admin-count">0</div><div class="stat-label">Admins</div></div>
         </div>
-
-        <!-- Users List -->
         <div id="users-management-list"></div>
-        
-        <button id="btn-load-more-users" class="load-more-btn hidden" onclick="loadMoreUsers()">Load More Users</button>
+        <button id="btn-load-more-users" class="load-more-btn hidden secondary" onclick="loadMoreUsers()" style="margin:10px auto; display:block;">Load More Users</button>
     </div>
 
     <!-- MODALS -->
-    <!-- About Modal -->
+    <!-- Chat Image Preview Modal -->
+    <div id="modal-chat-image-preview" class="modal hidden">
+        <div class="modal-content text-center">
+            <h3>Send Image?</h3>
+            <img id="chat-preview-img-element" src="" style="max-width:100%; max-height:300px; border-radius:12px; margin:15px 0;">
+            <div class="flex gap-2">
+                <button onclick="confirmSendImage()">Send</button>
+                <button class="secondary" onclick="closeModal('modal-chat-image-preview'); document.getElementById('chat-img-input').value = '';">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-about" class="modal hidden">
         <div class="modal-content text-center">
             <h2 class="text-primary">আল ইখলাছ</h2>
@@ -659,7 +760,6 @@
         </div>
     </div>
 
-    <!-- Admin: Edit About -->
     <div id="modal-admin-about" class="modal hidden">
         <div class="modal-content">
             <h3>Edit About Section</h3>
@@ -675,7 +775,6 @@
         </div>
     </div>
 
-    <!-- Admin: Monthly Target -->
     <div id="modal-target" class="modal hidden">
         <div class="modal-content">
             <h3>Monthly Target</h3>
@@ -687,7 +786,6 @@
         </div>
     </div>
 
-    <!-- Admin: Add Donor -->
     <div id="modal-add-donor" class="modal hidden">
         <div class="modal-content">
             <h3>Add Manual Donor</h3>
@@ -707,7 +805,6 @@
         </div>
     </div>
 
-    <!-- Notice Modal -->
     <div id="modal-notice" class="modal hidden">
         <div class="modal-content">
             <h3>Post Notice</h3>
@@ -723,7 +820,6 @@
         </div>
     </div>
 
-    <!-- Blood Request Modal -->
     <div id="modal-blood" class="modal hidden">
         <div class="modal-content">
             <h3>Request Blood</h3>
@@ -737,48 +833,44 @@
             </select>
             <input type="text" id="blood-hospital" placeholder="Hospital Name">
             <input type="tel" id="blood-contact" placeholder="Contact Number">
-            <input type="text" id="blood-location" placeholder="Location">
+            <input type="text" id="blood-location" placeholder="Location (Area/City)">
             <div class="flex gap-2">
-                <button onclick="submitBloodRequest()">Submit for Approval</button>
+                <button onclick="submitBloodRequest()">Submit</button>
                 <button class="secondary" onclick="closeModal('modal-blood')">Cancel</button>
             </div>
         </div>
     </div>
-<!-- Fund Modal (Add Collection) -->
+
     <div id="modal-fund" class="modal hidden">
         <div class="modal-content">
             <h3 class="text-green">Add Collection</h3>
             <input type="text" id="fund-name" placeholder="Member/Source Name">
             <input type="number" id="fund-amount" placeholder="Amount (BDT)">
             <div class="flex gap-2">
-                <button onclick="submitFund('collection')">Save Collection</button>
+                <button onclick="submitFund('collection')">Save</button>
                 <button class="secondary" onclick="closeModal('modal-fund')">Cancel</button>
             </div>
         </div>
     </div>
-    <!-- Fund Modal -->
-    <!-- Expense Modal (এই অংশটি আপনার কোডে মিসিং ছিল) -->
+
     <div id="modal-expense" class="modal hidden">
         <div class="modal-content">
             <h3 class="text-red">Add Expense</h3>
             <input type="text" id="expense-name" placeholder="Expense Reason/Name">
             <input type="number" id="expense-amount" placeholder="Amount (BDT)">
             <div class="flex gap-2">
-                <!-- লক্ষ্য করুন: এখানে submitFund('expense') কল করা হয়েছে -->
-                <button onclick="submitFund('expense')" class="danger">Save Expense</button>
+                <button onclick="submitFund('expense')" class="danger">Save</button>
                 <button class="secondary" onclick="closeModal('modal-expense')">Cancel</button>
             </div>
         </div>
     </div>
-    <!-- Edit Transaction Modal (এটি আপনার কোডে নেই, তাই এরর আসছে) -->
+
     <div id="modal-edit-transaction" class="modal hidden">
         <div class="modal-content">
             <h3>Edit Transaction</h3>
-            <!-- এই ইনপুটগুলো না পেলে setting 'value' এরর দেয় -->
             <input type="hidden" id="edit-trans-id">
             <input type="text" id="edit-trans-name" placeholder="Name/Source">
             <input type="number" id="edit-trans-amount" placeholder="Amount (BDT)">
-            
             <div class="flex gap-2">
                 <button onclick="saveEditedTransaction()">Update</button>
                 <button class="danger" onclick="deleteTransaction()">Delete</button>
@@ -786,7 +878,7 @@
             <button class="secondary" onclick="closeModal('modal-edit-transaction')" style="margin-top:10px;">Cancel</button>
         </div>
     </div>
-    <!-- Edit Profile Modal -->
+
     <div id="modal-edit-profile" class="modal hidden">
         <div class="modal-content">
             <h3>Edit Profile</h3>
@@ -796,7 +888,7 @@
             <input type="text" id="edit-profile-address" placeholder="Address">
             <input type="tel" id="edit-profile-phone" placeholder="Phone">
             <input type="text" id="edit-profile-fb" placeholder="Facebook Link">
-            
+
             <div style="margin: 15px 0; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;">
                 <span style="font-size:0.9rem;">Ready to Donate Blood?</span>
                 <label class="switch">
@@ -812,7 +904,6 @@
         </div>
     </div>
 
-    <!-- Donation Edit Modal -->
     <div id="modal-donation-edit" class="modal hidden">
         <div class="modal-content">
             <h3>Update Donation Info</h3>
@@ -824,15 +915,12 @@
         </div>
     </div>
 
-    <!-- USER MANAGEMENT MODALS -->
-    <!-- Edit User Role Modal -->
+    <!-- User Mgmt Modals -->
     <div id="modal-edit-user-role" class="modal hidden">
         <div class="modal-content">
             <h3>Change User Role</h3>
             <input type="hidden" id="edit-role-user-id">
-            <p style="margin-bottom:10px; font-size:0.9rem;">
-                User: <strong id="edit-role-user-name"></strong>
-            </p>
+            <p style="margin-bottom:10px; font-size:0.9rem;">User: <strong id="edit-role-user-name"></strong></p>
             <select id="edit-role-select">
                 <option value="member">Member</option>
                 <option value="moderator">Moderator</option>
@@ -846,14 +934,11 @@
         </div>
     </div>
 
-    <!-- Block/Unblock User Modal -->
     <div id="modal-block-user" class="modal hidden">
         <div class="modal-content">
             <h3 id="block-modal-title">Block User</h3>
             <input type="hidden" id="block-user-id">
-            <p style="margin-bottom:10px; font-size:0.9rem;">
-                User: <strong id="block-user-name"></strong>
-            </p>
+            <p style="margin-bottom:10px; font-size:0.9rem;">User: <strong id="block-user-name"></strong></p>
             <p id="block-confirmation-text" style="font-size:0.85rem; opacity:0.8; margin-bottom:15px;"></p>
             <div class="flex gap-2">
                 <button id="block-confirm-btn" class="danger" onclick="confirmBlockUser()">Block User</button>
@@ -862,17 +947,12 @@
         </div>
     </div>
 
-    <!-- Delete User Modal -->
     <div id="modal-delete-user" class="modal hidden">
         <div class="modal-content">
             <h3 class="text-red">⚠️ Delete User Account</h3>
             <input type="hidden" id="delete-user-id">
-            <p style="margin-bottom:10px; font-size:0.9rem;">
-                User: <strong id="delete-user-name"></strong>
-            </p>
-            <p style="font-size:0.85rem; opacity:0.8; margin-bottom:10px; color:var(--danger);">
-                This action cannot be undone! All user data will be permanently deleted.
-            </p>
+            <p style="margin-bottom:10px; font-size:0.9rem;">User: <strong id="delete-user-name"></strong></p>
+            <p style="font-size:0.85rem; opacity:0.8; margin-bottom:10px; color:var(--danger);">This action cannot be undone! All user data will be permanently deleted.</p>
             <p style="font-size:0.8rem; margin-bottom:15px;">Type <strong>DELETE</strong> to confirm:</p>
             <input type="text" id="delete-confirmation-input" placeholder="Type DELETE">
             <div class="flex gap-2">
@@ -882,14 +962,11 @@
         </div>
     </div>
 
-    <!-- User Details Modal -->
     <div id="modal-user-details" class="modal hidden">
         <div class="modal-content">
             <h3>User Details</h3>
-            <div id="user-details-content" style="font-size:0.9rem;">
-                <!-- User details will be populated here -->
-            </div>
-            <button onclick="closeModal('modal-user-details')" style="margin-top:15px;">Close</button>
+            <div id="user-details-content" style="font-size:0.9rem;"></div>
+            <button onclick="closeModal('modal-user-details')" style="margin-top:15px;" class="secondary">Close</button>
         </div>
     </div>
 
@@ -903,7 +980,6 @@
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, where, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getDatabase, ref, push, onChildAdded, onChildChanged, onChildRemoved, remove, update, get, query as rQuery, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIG (Replace with your actual keys if needed, kept from original)
         const firebaseConfig = {
             apiKey: "AIzaSyAZ_pL1E_x7UyWoDDKg0mo6h15CZZhPQhA",
             authDomain: "al-ikhlas-3bae4.firebaseapp.com",
@@ -927,14 +1003,20 @@
         let lastMemberDoc = null; 
         let lastNoticeDoc = null;
         let pinnedMessageId = null;
+        let noticeScrollInterval = null;
+        let tempChatImage = null; // Store image file before sending
 
         // --- CORE UTILS ---
-        const SKELETON_CARD = '<div class="card skeleton" style="height:120px; margin-bottom:15px;"></div>';
-
         window.toggleMenu = () => { document.getElementById('header-dropdown').classList.toggle('show'); }
+        window.toggleFab = () => { document.getElementById('fab-menu').classList.toggle('show'); document.getElementById('fab-icon').classList.toggle('fa-plus'); document.getElementById('fab-icon').classList.toggle('fa-times'); }
+        
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.header-menu-btn') && !e.target.closest('.dropdown-menu')) {
                 document.getElementById('header-dropdown').classList.remove('show');
+            }
+            if (!e.target.closest('.fab-container')) {
+                document.getElementById('fab-menu').classList.remove('show');
+                document.getElementById('fab-icon').className = 'fas fa-plus';
             }
         });
 
@@ -951,15 +1033,15 @@
             nav_chat: { en: "Chat", bn: "চ্যাট" },
             nav_admin: { en: "Admin", bn: "অ্যাডমিন" },
             nav_profile: { en: "Profile", bn: "প্রোফাইল" },
-            stat_collection: { en: "Total Collection", bn: "মোট সংগ্রহ" },
-            stat_expense: { en: "Total Expense", bn: "মোট খরচ" },
-            stat_balance: { en: "Current Balance", bn: "বর্তমান জের" },
+            stat_collection: { en: "Collection", bn: "সংগ্রহ" },
+            stat_expense: { en: "Expense", bn: "খরচ" },
+            stat_balance: { en: "Balance", bn: "জের" },
             stat_members: { en: "Members", bn: "সদস্য" },
-            monthly_target: { en: "Monthly Target", bn: "মাসিক লক্ষ্য" },
-            edit_target: { en: "Edit Target", bn: "লক্ষ্য পরিবর্তন" },
+            monthly_target: { en: "Monthly Target", bn: "এবারের লক্ষ্য" },
+            edit_target: { en: "Edit", bn: "পরিবর্তন" },
             btn_donate: { en: "🤝 Donate Now", bn: "🤝 দান করুন" },
             header_notice: { en: "📌 Notice Board", bn: "📌 নোটিশ বোর্ড" },
-            btn_notice: { en: "+ Post Notice", bn: "+ নোটিশ দিন" },
+            btn_notice: { en: "+ Notice", bn: "+ নোটিশ" },
             btn_load_more: { en: "Load More", bn: "আরও দেখুন" },
             header_blood: { en: "🩸 Blood Requests", bn: "🩸 রক্তের অনুরোধ" },
             btn_req_blood: { en: "+ Request Blood", bn: "+ অনুরোধ করুন" },
@@ -981,27 +1063,22 @@
         };
 
         function updateLanguage(lang) {
-            // Update text elements
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[key] && translations[key][lang]) {
                     el.textContent = translations[key][lang];
                 }
             });
-
-            // Update Toggle Button Text specifically
             const toggleText = document.getElementById('lang-toggle-text');
             if(toggleText) {
                 toggleText.textContent = lang === 'en' ? 'বাংলা' : 'English';
             }
         }
 
-        // Initialize Language on Load
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('lang') || 'en';
             updateLanguage(savedLang);
         });
-
 
         window.toggleDarkMode = () => {
             const html = document.documentElement;
@@ -1031,8 +1108,13 @@
         }
 
         window.toggleLoader = (show) => { document.getElementById('global-loader').style.display = show ? 'flex' : 'none'; }
+        window.manualReload = () => {
+            const btn = document.getElementById('btn-reload');
+            btn.classList.add('spin');
+            loadHomeData();
+            setTimeout(() => btn.classList.remove('spin'), 1000);
+        }
 
-        // IMAGE COMPRESSION
         async function compressImage(file) {
             if (!file.type.startsWith('image/')) return file;
             const bmp = await createImageBitmap(file);
@@ -1057,14 +1139,33 @@
             } catch(e) { console.error(e); return null; }
         }
 
-        // NAVIGATION
         window.router = (viewName, navEl, param = null) => {
+            // ১. সব সেকশন লুকিয়ে ফেলা
             document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
+            // ২. নির্দিষ্ট সেকশন দেখানো
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            
+
+            // ৩. নেভিগেশন বারের একটিভ কালার সেট করা
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(navEl) navEl.classList.add('active');
-            
+
+            // --- নতুন কোড শুরু: প্লাস আইকন (FAB) শুধু হোমপেজে দেখাবে ---
+            const fab = document.querySelector('.fab-container');
+            if(viewName === 'home') {
+                fab.classList.remove('hidden'); // হোমপেজে আইকনটি দেখাবে
+            } else {
+                fab.classList.add('hidden');    // অন্য সব পেজে লুকিয়ে রাখবে
+                
+                // যদি মেনু খোলা থাকে, তবে অন্য পেজে যাওয়ার সময় সেটা বন্ধ করে দেবে
+                document.getElementById('fab-menu').classList.remove('show');
+                document.getElementById('fab-icon').className = 'fas fa-plus';
+            }
+            // --- নতুন কোড শেষ ---
+
+            // ৪. হোমপেজ থেকে অন্য পেজে গেলে অটো-স্ক্রল বন্ধ করা
+            if(viewName !== 'home' && noticeScrollInterval) clearInterval(noticeScrollInterval);
+
+            // ৫. পেজ অনুযায়ী ডাটা লোড করা
             if(viewName === 'home') loadHomeData();
             if(viewName === 'blood') loadBloodRequests();
             if(viewName === 'members') loadMembers(); 
@@ -1080,6 +1181,7 @@
         window.openModal = (id) => {
             document.getElementById(id).classList.remove('hidden');
             document.getElementById('header-dropdown').classList.remove('show');
+            document.getElementById('fab-menu').classList.remove('show');
             if(id === 'modal-admin-about') populateAdminAbout();
         }
         window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
@@ -1095,7 +1197,7 @@
                 document.getElementById('login-form').classList.remove('hidden');
             }
         }
-        
+
         window.previewRegImage = (input) => {
             if(input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -1130,7 +1232,7 @@
                     socialLinks: { facebook: fb },
                     role: "member",
                     status: "active",
-                    bloodEligible: true, // Default eligible
+                    bloodEligible: true,
                     hasCompletedOnboarding: false,
                     createdAt: serverTimestamp()
                 });
@@ -1148,46 +1250,34 @@
             catch (error) { showToast("Login Failed: " + error.message); toggleLoader(false); }
         });
 
-        // AUTH STATE CHANGE
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 const userSnap = await getDoc(doc(db, "users", user.uid));
-                
+
                 if (userSnap.exists()) {
                     userData = userSnap.data();
-                    
-                    // SECURITY: Check if user is blocked
                     if(userData.status === 'blocked') {
-                        showToast("Your account has been blocked. Please contact admin.");
+                        showToast("Account blocked.");
                         await signOut(auth);
-                        document.getElementById('auth-screen').classList.remove('hidden');
-                        document.getElementById('app-interface').classList.add('hidden');
                         toggleLoader(false);
                         return;
                     }
-                    
                     isAdmin = userData.role === 'admin';
                     document.body.classList.toggle('is-admin', isAdmin);
                     document.getElementById('user-role-badge').textContent = isAdmin ? 'Admin' : 'Member';
-                    
-                    // Onboarding Check
-                    if (userData.hasCompletedOnboarding === false || userData.hasCompletedOnboarding === undefined) {
+                    if (userData.hasCompletedOnboarding === false) {
                         document.getElementById('onboarding-modal').classList.remove('hidden');
                     }
-                    
-                    // Start Heartbeat
                     startHeartbeat();
                     setupNotificationListener();
-                    
-                    // Ensure translation is applied after loading user-specific UI
                     setTimeout(() => updateLanguage(localStorage.getItem('lang') || 'en'), 500);
                 }
 
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-interface').classList.remove('hidden');
                 router('home', document.querySelector('.nav-item.active'));
-                
+
                 setupChatListener();
                 setupBloodNotification();
                 fetchDonationSettings();
@@ -1203,9 +1293,10 @@
 
         window.handleLogout = () => { signOut(auth); window.location.reload(); }
 
-        // --- ONBOARDING ---
         window.nextOnboarding = (step) => {
-            document.querySelectorAll('.onboarding-step').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.onboarding-step').forEach(el => el.classList.remove('active', 'hidden'));
+            document.querySelectorAll('.onboarding-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`step-${step}`).classList.remove('hidden');
             document.getElementById(`step-${step}`).classList.add('active');
         }
         window.finishOnboarding = async () => {
@@ -1215,22 +1306,20 @@
             }
         }
         window.showOnboarding = () => {
-             document.querySelectorAll('.onboarding-step').forEach(el => el.classList.remove('active'));
-             document.getElementById('step-1').classList.add('active');
+             document.querySelectorAll('.onboarding-step').forEach(el => el.classList.add('hidden'));
+             document.getElementById('step-1').classList.remove('hidden');
              document.getElementById('onboarding-modal').classList.remove('hidden');
              document.getElementById('header-dropdown').classList.remove('show');
         }
 
-        // --- ONLINE STATUS (HEARTBEAT) ---
         function startHeartbeat() {
             setInterval(() => {
                 if (currentUser) {
                     updateDoc(doc(db, "users", currentUser.uid), { lastActive: serverTimestamp() });
                 }
-            }, 60000); // Every 1 min
+            }, 60000);
         }
 
-        // --- HOME & DASHBOARD ---
         async function fetchMonthlyTarget() {
             const snap = await getDoc(doc(db, "settings", "donationTarget"));
             const target = snap.exists() ? (snap.data().monthlyTarget || 0) : 0;
@@ -1238,14 +1327,12 @@
         }
 
         async function loadHomeData() {
-            // ১. Skeleton লোডার দেখানো (ডাটা আসার আগে)
             const skeletonStats = '<div class="skeleton" style="height:20px; width:60px; margin:0 auto;"></div>';
             document.getElementById('stat-funds').innerHTML = skeletonStats;
             document.getElementById('stat-expense').innerHTML = skeletonStats;
             document.getElementById('stat-balance').innerHTML = skeletonStats;
             document.getElementById('stat-members').innerHTML = skeletonStats;
 
-            // ২. ডাটা ফেচ করা
             const fundSnap = await getDocs(collection(db, "funds"));
             let totalCol = 0, totalExp = 0, monthCol = 0;
             const currentMonth = new Date().getMonth();
@@ -1260,78 +1347,66 @@
                 }
             });
 
-            // ৩. আসল ডাটা বসানো
             document.getElementById('stat-funds').textContent = totalCol + "৳";
             document.getElementById('stat-expense').textContent = totalExp + "৳";
             document.getElementById('stat-balance').textContent = (totalCol - totalExp) + "৳";
-            
+
             const userSnap = await getDocs(collection(db, "users")); 
             const donorSnap = await getDocs(query(collection(db, "donors"), where("status", "!=", "inactive"))); 
             document.getElementById('stat-members').textContent = userSnap.size + donorSnap.size;
 
-            // Monthly Target
+            // Circular Progress Logic
             const target = await fetchMonthlyTarget();
             document.getElementById('monthly-progress-text').textContent = `${monthCol} / ${target}৳`;
-            const pct = target > 0 ? Math.min((monthCol / target) * 100, 100) : 0;
-            document.getElementById('monthly-progress-bar').style.width = pct + "%";
+            const pct = target > 0 ? Math.min(Math.round((monthCol / target) * 100), 100) : 0;
+            
+            // Circumference = 2 * PI * 30 ≈ 188
+            const circle = document.getElementById('monthly-circle-bar');
+            const circumference = 188;
+            const offset = circumference - (pct / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            document.getElementById('monthly-pct-text').textContent = `${pct}%`;
 
-            // Notices Update
+            // Notices Update (Carousel)
             lastNoticeDoc = null;
-            document.getElementById('notice-list').innerHTML = ''; 
-            // Notice এর জন্য ছোট স্কেলেটন
-            document.getElementById('notice-list').innerHTML = `
-                <div class="card skeleton" style="height:100px;"></div>
-                <div class="card skeleton" style="height:100px;"></div>
+            const list = document.getElementById('notice-list');
+            list.innerHTML = `
+                <div class="card skeleton notice-card"></div>
+                <div class="card skeleton notice-card"></div>
             `;
             loadMoreNotices();
         }
+
         window.loadMoreNotices = async () => {
-            const btn = document.getElementById('btn-load-more-notice');
             const list = document.getElementById('notice-list');
-            btn.textContent = "Loading...";
+            // Don't clear if loading more, but here we assume one load for home carousel
             
             let q = query(collection(db, "notices"), orderBy("timestamp", "desc"), limit(5));
-            if (lastNoticeDoc) {
-                q = query(collection(db, "notices"), orderBy("timestamp", "desc"), startAfter(lastNoticeDoc), limit(5));
-            } else {
-                // First load - clear skeleton loaders
-                list.innerHTML = '';
-            }
-
             const snapshot = await getDocs(q);
+            
+            list.innerHTML = ''; // Clear skeleton
+
             if (snapshot.empty) {
-                btn.classList.add('hidden');
-                if(!lastNoticeDoc) list.innerHTML = '<p style="text-align:center; opacity:0.6; padding:2rem;">No notices yet</p>';
+                list.innerHTML = `
+                    <div class="empty-state w-full">
+                        <i class="far fa-folder-open"></i>
+                        <p>No notices found</p>
+                    </div>`;
                 return;
             }
-
-            lastNoticeDoc = snapshot.docs[snapshot.docs.length - 1];
-            btn.textContent = "Load More";
-            btn.classList.remove('hidden');
 
             snapshot.forEach(doc => {
                 const data = doc.data();
                 const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : '';
-                
+
                 let mediaHTML = '';
                 if(data.youtubeUrl) {
-                    // Enhanced YouTube ID extraction - handles all common formats
                     let vidId = null;
                     const url = data.youtubeUrl;
-                    
-                    // Check if URL contains 'v=' parameter (standard format)
-                    if(url.includes('v=')) {
-                        vidId = url.split('v=')[1].split('&')[0].split('?')[0];
-                    }
-                    // Check for youtu.be short links
-                    else if(url.includes('youtu.be/')) {
-                        vidId = url.split('youtu.be/')[1].split('?')[0].split('&')[0];
-                    }
-                    // Fallback: extract last part of URL
-                    else {
-                        vidId = url.split('/').pop().split('?')[0].split('&')[0];
-                    }
-                    
+                    if(url.includes('v=')) vidId = url.split('v=')[1].split('&')[0].split('?')[0];
+                    else if(url.includes('youtu.be/')) vidId = url.split('youtu.be/')[1].split('?')[0].split('&')[0];
+                    else vidId = url.split('/').pop().split('?')[0].split('&')[0];
+
                     if(vidId) mediaHTML += `<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin-bottom: 10px; background: #000; border-radius:12px;"><iframe src="https://www.youtube.com/embed/${vidId}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;"></iframe></div>`;
                 }
                 if(data.imageUrl) {
@@ -1341,18 +1416,29 @@
                 const deleteBtn = isAdmin ? `<i class="fas fa-trash text-red" style="float:right; cursor:pointer;" onclick="deleteNotice('${doc.id}')"></i>` : '';
 
                 const div = document.createElement('div');
-                div.className = "card";
+                div.className = "card notice-card";
                 div.innerHTML = `
                     <div class="flex justify-between items-center" style="margin-bottom:5px;">
                         <h4 style="color:var(--primary)">${data.title}</h4>
                         <small style="opacity:0.6">${date}</small>
                     </div>
                     ${mediaHTML}
-                    <p style="font-size:0.9rem; opacity:0.8;">${data.content}</p>
+                    <p style="font-size:0.9rem; opacity:0.8; white-space: pre-wrap;">${data.content}</p>
                     ${deleteBtn}
                 `;
                 list.appendChild(div);
             });
+
+            // Auto-scroll Logic
+            if(noticeScrollInterval) clearInterval(noticeScrollInterval);
+            noticeScrollInterval = setInterval(() => {
+                const cardWidth = list.querySelector('.notice-card')?.offsetWidth + 10 || 0;
+                if(list.scrollLeft + list.offsetWidth >= list.scrollWidth) {
+                    list.scrollTo({left: 0, behavior: 'smooth'});
+                } else {
+                    list.scrollBy({left: cardWidth, behavior: 'smooth'});
+                }
+            }, 3000); // 3 seconds
         }
 
         window.saveMonthlyTarget = async () => {
@@ -1368,7 +1454,7 @@
             const content = document.getElementById('notice-content').value;
             const yt = document.getElementById('notice-yt').value;
             const imgInput = document.getElementById('notice-img');
-            
+
             if(!title || !content) return showToast("Required fields missing");
 
             toggleLoader(true);
@@ -1384,7 +1470,6 @@
 
         window.deleteNotice = async(id) => { if(confirm("Delete?")) { await deleteDoc(doc(db, "notices", id)); loadHomeData(); } }
 
-        // --- BLOOD SYSTEM ---
         function setupBloodNotification() {
             onSnapshot(query(collection(db, "bloodRequests"), where("approved", "==", false)), (snap) => {
                 document.getElementById('blood-red-dot').className = snap.size > 0 ? 'red-dot visible' : 'red-dot';
@@ -1395,18 +1480,25 @@
             const list = document.getElementById('blood-list');
             list.innerHTML = '';
             document.getElementById('blood-pending-list').innerHTML = '';
-            
+
             let activeCount = 0;
             const q = query(collection(db, "bloodRequests"), orderBy("timestamp", "desc"));
             const snap = await getDocs(q);
             const now = Date.now();
             let hasPending = false;
 
+            if (snap.empty) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-heart-broken"></i>
+                        <p>No active requests</p>
+                    </div>`;
+            }
+
             snap.forEach(async (docSnap) => {
                 const data = docSnap.data();
                 const id = docSnap.id;
-                
-                // Expiry Check
+
                 if (data.status !== 'Expired' && data.status !== 'Completed') {
                      if (now - (data.timestamp?.toMillis() || 0) > 72 * 60 * 60 * 1000) {
                          await updateDoc(doc(db, "bloodRequests", id), { status: 'Expired' });
@@ -1425,22 +1517,25 @@
                     renderBloodCard(id, data, document.getElementById('blood-pending-list'), true);
                 }
             });
-            
+
             document.getElementById('active-blood-count').textContent = activeCount;
             document.getElementById('pending-blood-container').classList.toggle('hidden', !hasPending);
         }
 
         function renderBloodCard(id, data, container, isPending) {
+            const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.location)}`;
             const div = document.createElement('div');
             div.className = "card blood-card";
             div.innerHTML = `
                 <span class="blood-badge badge-${data.status}">${data.status}</span>
-                <div class="blood-group">${data.bloodGroup}</div>
-                <div style="overflow:hidden;">
-                    <h4>${data.hospital}</h4>
-                    <p style="font-size:0.85rem; opacity:0.7;">Pt: ${data.patient}</p>
-                    <p style="font-size:0.85rem;"><i class="fas fa-map-marker-alt"></i> ${data.location}</p>
-                    ${!isPending && data.status === 'Urgent' ? `<a href="tel:${data.contact}" style="display:inline-block; margin-top:10px; font-weight:600; color:var(--primary); text-decoration:none;"><i class="fas fa-phone"></i> Call</a>` : ''}
+                <div class="blood-group"><span>${data.bloodGroup}</span></div>
+                <div style="overflow:hidden; margin-left: 60px;">
+                    <h4 style="font-size:1rem;">${data.hospital}</h4>
+                    <p style="font-size:0.8rem; opacity:0.7;">Pt: ${data.patient}</p>
+                    <a href="${mapLink}" target="_blank" style="font-size:0.8rem; color:#666; display:block; margin:5px 0;">
+                        <i class="fas fa-map-marker-alt text-red"></i> ${data.location}
+                    </a>
+                    ${!isPending && data.status === 'Urgent' ? `<a href="tel:${data.contact}" style="display:inline-block; margin-top:5px; font-weight:600; color:var(--primary); text-decoration:none;"><i class="fas fa-phone"></i> Call</a>` : ''}
                     <div style="margin-top:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:5px; text-align:right;">
                         ${(isAdmin && isPending) ? `<button onclick="updateBloodStatus('${id}', 'approve')" style="font-size:0.7rem; width:auto; background:green;">Approve</button> <button onclick="updateBloodStatus('${id}', 'reject')" style="font-size:0.7rem; width:auto; background:red;">Reject</button>` : ''}
                         ${(data.createdBy === currentUser.uid || isAdmin) && data.status === 'Urgent' ? `<button onclick="updateBloodStatus('${id}', 'complete')" style="font-size:0.7rem; width:auto;">Mark Done</button>` : ''}
@@ -1475,28 +1570,22 @@
         }
 
         window.filterBloodEligible = () => {
-            // Feature stub: In a real advanced app, this would filter visible requests or match donors
-            // Since requests are passive, we will just toast for now or filter the member list in context
             showToast("Showing requests matching eligible donors...");
-            // Logic would go here to cross ref
         }
 
-        // --- MEMBERS & PAGINATION ---
         async function loadMembers(isLoadMore = false) {
             const list = document.getElementById('members-list');
-            
-            // Skeleton দেখানো (যদি Load More না হয়)
+
             if(!isLoadMore) {
                 list.innerHTML = '';
                 lastMemberDoc = null;
-                // ৩টি ফেইক মেম্বার কার্ড দেখানো
                 for(let i=0; i<3; i++) {
                     list.innerHTML += `
                         <div class="card flex items-center gap-2">
-                            <div class="skeleton skeleton-circle"></div>
+                            <div class="skeleton" style="width:50px; height:50px; border-radius:50%;"></div>
                             <div style="flex:1;">
-                                <div class="skeleton skeleton-text" style="width:60%"></div>
-                                <div class="skeleton skeleton-text" style="width:40%"></div>
+                                <div class="skeleton" style="width:60%; height:15px; margin-bottom:5px;"></div>
+                                <div class="skeleton" style="width:40%; height:15px;"></div>
                             </div>
                         </div>
                     `;
@@ -1507,8 +1596,7 @@
             if(lastMemberDoc) q = query(collection(db, "users"), orderBy("name"), startAfter(lastMemberDoc), limit(10));
 
             const snap = await getDocs(q);
-            
-            // Skeleton রিমুভ করা (প্রথম লোডের ক্ষেত্রে)
+
             if(!isLoadMore) list.innerHTML = ''; 
 
             if(snap.empty) {
@@ -1516,13 +1604,12 @@
                 if(!isLoadMore) list.innerHTML = "<p class='text-center'>No members found.</p>";
                 return;
             }
-            
+
             lastMemberDoc = snap.docs[snap.docs.length - 1];
             document.getElementById('btn-load-members').style.display = 'block';
 
             snap.forEach(d => renderMemberCard(d.id, d.data(), list));
-            
-            // Also load donors manually if it's the first load
+
             if(!isLoadMore) {
                 const dSnap = await getDocs(query(collection(db, "donors"), where("status", "!=", "inactive")));
                 dSnap.forEach(d => renderMemberCard(d.id, {...d.data(), type: 'donor'}, list));
@@ -1531,17 +1618,17 @@
 
         function renderMemberCard(id, u, container) {
             const isOnline = u.lastActive && (Date.now() - u.lastActive.toMillis() < 5 * 60 * 1000);
-            const statusDot = isOnline ? '<span class="status-dot online"></span>' : '<span class="status-dot"></span>';
-            const eligibleBadge = u.bloodEligible ? '<i class="fas fa-check-circle text-green" title="Ready to Donate"></i>' : '';
+            const statusColor = isOnline ? 'var(--success)' : '#ccc';
+            const eligibleBadge = u.bloodEligible ? '<i class="fas fa-check-circle text-green" title="Ready"></i>' : '';
 
             container.innerHTML += `
                 <div class="card member-card" data-name="${u.name.toLowerCase()}" data-blood="${u.bloodGroup || ''}" onclick="router('profile', null, '${id}')" style="cursor:pointer; padding:10px;">
                     <div class="flex items-center gap-2">
-                        <img src="${u.profileImage || 'https://via.placeholder.com/50'}" loading="lazy" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                        <img src="${u.profileImage || 'https://via.placeholder.com/50'}" loading="lazy" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid ${statusColor};">
                         <div style="flex:1;">
                             <h4 style="margin:0; font-size:1rem;">${u.name} ${eligibleBadge}</h4>
                             <div style="font-size:0.75rem; color:#666;">
-                                ${statusDot} ${u.bloodGroup || 'N/A'} ${u.type === 'donor' ? '(Donor)' : ''}
+                                ${u.bloodGroup || 'N/A'} ${u.type === 'donor' ? '(Donor)' : ''}
                             </div>
                         </div>
                     </div>
@@ -1559,7 +1646,6 @@
             });
         }
 
-        // --- PROFILE & ELIGIBILITY ---
         async function loadProfile(uid) {
             toggleLoader(true);
             const targetId = uid || currentUser.uid;
@@ -1578,8 +1664,7 @@
                 document.getElementById('profile-role').textContent = u.role ? u.role.toUpperCase() : "MEMBER";
                 document.getElementById('profile-address').textContent = u.address || "";
                 document.getElementById('profile-blood-badge').textContent = u.bloodGroup || "N/A";
-                
-                // Image
+
                 if(u.profileImage) {
                     document.getElementById('profile-img-display').src = u.profileImage;
                     document.getElementById('profile-img-display').classList.remove('hidden');
@@ -1589,11 +1674,9 @@
                     document.getElementById('profile-initial-display').classList.remove('hidden');
                 }
 
-                // FIX: PROFILE JOIN DATE LOGIC
                 const dateStr = u.createdAt?.toDate ? u.createdAt.toDate().toLocaleDateString() : 'N/A';
                 document.getElementById('profile-joined').textContent = "Joined: " + dateStr;
 
-                // Eligibility
                 const eligBadge = document.getElementById('eligibility-badge');
                 if(u.bloodEligible) {
                     eligBadge.textContent = "Ready to Donate";
@@ -1605,15 +1688,12 @@
                     eligBadge.style.color = "#c62828";
                 }
 
-                // Edit Button
                 const btnEdit = document.getElementById('btn-edit-profile');
                 if(isOwn) {
                     btnEdit.classList.remove('hidden');
-                    // Set Toggle State
                     document.getElementById('edit-blood-ready').checked = u.bloodEligible;
                 } else btnEdit.classList.add('hidden');
 
-                // Links
                 const linkCall = document.getElementById('link-call');
                 if(u.phone) { linkCall.href = `tel:${u.phone}`; linkCall.classList.remove('hidden'); }
                 const linkFb = document.getElementById('link-fb');
@@ -1624,23 +1704,19 @@
 
         window.saveProfileChanges = async () => {
             toggleLoader(true);
-            
-            // 1. ভ্যালু নেওয়ার সময় Safety Check যোগ করা হলো (|| "")
-            // যদি ইনপুট খালি থাকে এবং userData তেও কিছু না থাকে, তবে "" বসবে (undefined হবে না)
             const name = document.getElementById('edit-profile-name').value || userData.name || "";
             const phone = document.getElementById('edit-profile-phone').value || userData.phone || "";
             const addr = document.getElementById('edit-profile-address').value || userData.address || "";
             
-            // সোশ্যাল লিংকের সেফটি চেক
             const fbInput = document.getElementById('edit-profile-fb').value;
             const oldFb = (userData.socialLinks && userData.socialLinks.facebook) ? userData.socialLinks.facebook : "";
             const fb = fbInput || oldFb || "";
 
             const eligible = document.getElementById('edit-blood-ready').checked;
             const file = document.getElementById('edit-profile-img').files[0];
-            
+
             let url = userData.profileImage || "";
-            
+
             try {
                 if(file) url = await uploadToImgBB(file);
 
@@ -1652,26 +1728,20 @@
                     socialLinks: { facebook: fb },
                     bloodEligible: eligible
                 });
-                
+
                 showToast("Profile Updated Successfully!");
-                loadProfile(currentUser.uid); // প্রোফাইল রিফ্রেশ
+                loadProfile(currentUser.uid);
                 closeModal('modal-edit-profile');
             } catch (error) {
                 console.error("Update Error:", error);
                 showToast("Error: " + error.message);
             }
-            
+
             toggleLoader(false);
         }
 
-        // --- CHAT SYSTEM (Pinned & Unread) ---
         function setupChatListener() {
             const chatRef = ref(rtdb, 'messages');
-            
-            // Pinned Logic: We check messages for isPinned
-            // For simplicity in this structure, we scan incoming messages
-            // Ideally, a separate node 'pinned_message' is better, but preserving structure:
-            
             onChildAdded(chatRef, (snapshot) => {
                 const msg = snapshot.val();
                 if (msg.isPinned) updatePinnedUI(msg, snapshot.key);
@@ -1679,18 +1749,14 @@
                 scrollToBottomChat();
                 updateUnreadBadge(msg.timestamp);
             });
-            
             onChildChanged(chatRef, (snapshot) => {
                  const msg = snapshot.val();
                  if (msg.isPinned) updatePinnedUI(msg, snapshot.key);
-                 // If unpinned
                  if (!msg.isPinned && pinnedMessageId === snapshot.key) {
                      document.getElementById('pinned-message-container').style.display = 'none';
                      pinnedMessageId = null;
                  }
             });
-            
-            // NEW: Handle message deletion in real-time
             onChildRemoved(chatRef, (snapshot) => {
                 const msgEl = document.getElementById(`msg-${snapshot.key}`);
                 if(msgEl) {
@@ -1723,7 +1789,7 @@
                 }
             }
         }
-        
+
         function markChatRead() {
             localStorage.setItem('lastSeenChat', Date.now());
             const badge = document.getElementById('chat-unread-badge');
@@ -1734,12 +1800,12 @@
         function createMessageHTML(key, msg) {
             const isMe = msg.uid === currentUser.uid;
             const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
+
             return `
                 <div id="msg-${key}" class="msg ${isMe ? 'mine' : 'others'} ${msg.isAdmin ? 'admin-msg' : ''}">
-                    ${msg.isAdmin ? '<small class="text-primary font-bold">Admin</small>' : `<small class="text-primary font-bold">${msg.name}</small>`}
-                    ${msg.replyTo ? `<div class="reply-context"><b>${msg.replyTo.name}</b>: ${msg.replyTo.text.substring(0,30)}...</div>` : ''}
-                    ${msg.type === 'image' ? `<img src="${msg.text}" style="max-width:100%; border-radius:8px;">` : `<span>${msg.text}</span>`}
+                    ${msg.isAdmin ? '<small class="text-primary font-bold">Admin</small>' : `<small class="text-primary font-bold" style="color:var(--primary)">${msg.name}</small>`}
+                    ${msg.replyTo ? `<div style="font-size:0.75rem; background:rgba(0,0,0,0.05); padding:4px; border-left:2px solid var(--primary); margin-bottom:4px;"><b>${msg.replyTo.name}</b>: ${msg.replyTo.text.substring(0,20)}...</div>` : ''}
+                    ${msg.type === 'image' ? `<img src="${msg.text}" style="max-width:100%; border-radius:8px; margin-top:5px;">` : `<span>${msg.text}</span>`}
                     <div class="msg-meta">
                         <i class="fas fa-reply msg-action-btn" onclick="setReply('${key}', '${msg.name}', '${msg.type === 'image' ? 'Image' : msg.text.replace(/'/g, "\\'")}')"></i>
                         ${isMe ? `<i class="fas fa-trash msg-action-btn" onclick="deleteMessage('${key}')"></i>` : ''}
@@ -1770,14 +1836,40 @@
             cancelReply();
         }
 
+        // Handle Image Pre-send Modal
+        window.handleChatImageUpload = (input) => {
+            if(input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('chat-preview-img-element').src = e.target.result;
+                    tempChatImage = file;
+                    openModal('modal-chat-image-preview');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        window.confirmSendImage = async () => {
+            if(!tempChatImage) return;
+            closeModal('modal-chat-image-preview');
+            showToast("Uploading Image...");
+            const url = await uploadToImgBB(tempChatImage);
+            if(url) {
+                const msgData = { text: url, type: 'image', uid: currentUser.uid, name: userData.name || "User", isAdmin, timestamp: Date.now() };
+                await push(ref(rtdb, 'messages'), msgData);
+            } else {
+                showToast("Upload Failed");
+            }
+            tempChatImage = null;
+            document.getElementById('chat-img-input').value = '';
+        }
+
         window.pinMessage = async (key) => {
             if(!confirm("Pin this message?")) return;
-            // Unpin others (basic implementation)
-            // Just set this one true for now. In robust apps, reset others.
             await update(ref(rtdb, `messages/${key}`), { isPinned: true });
         }
 
-        // NEW: Reply System Functions
         window.setReply = (msgKey, name, text) => {
             replyData = { msgKey, name, text };
             document.getElementById('reply-to-name').textContent = name;
@@ -1790,7 +1882,6 @@
             document.getElementById('reply-preview-bar').style.display = 'none';
         }
 
-        // NEW: Delete Message Function
         window.deleteMessage = async (key) => {
             if(!confirm("Delete this message?")) return;
             try {
@@ -1804,11 +1895,7 @@
             }
         }
 
-        // --- NOTIFICATIONS ---
         async function sendNotificationToAll(title, message, type, adminOnly = false) {
-             // In a real backend (Cloud Functions) this loops users.
-             // Here, client-side, we can't write to 100 docs efficiently.
-             // Strategy: Add to a 'global_notifications' collection that client listens to.
              await addDoc(collection(db, "notifications"), {
                  title, message, type, timestamp: serverTimestamp(), target: adminOnly ? 'admin' : 'all'
              });
@@ -1821,25 +1908,27 @@
                 list.innerHTML = '';
                 let count = 0;
                 
+                if (snap.empty) {
+                    list.innerHTML = `<div class="empty-state"><i class="far fa-bell"></i><p>No notifications</p></div>`;
+                }
+
                 snap.forEach(d => {
                     const data = d.data();
                     if(data.target === 'admin' && !isAdmin) return;
-                    
-                    // Simple local read check (Using localStorage for simplicity)
+
                     const isRead = localStorage.getItem(`notif_read_${d.id}`);
                     if(!isRead) count++;
 
                     const div = document.createElement('div');
-                    div.className = `notification-item ${!isRead ? 'unread' : ''}`;
+                    div.style.cssText = `padding:12px; margin-bottom:10px; border-radius:12px; background:${isRead ? 'var(--glass-surface)' : 'rgba(56, 239, 125, 0.1)'}; border:var(--glass-border); border-left:4px solid ${isRead ? '#ccc' : 'var(--primary)'};`;
+                    div.onclick = () => markRead(d.id);
                     div.innerHTML = `
-                        <div class="notif-content" onclick="markRead('${d.id}')">
-                            <h5>${data.title}</h5>
-                            <p>${data.message}</p>
-                        </div>
+                        <h5 style="margin-bottom:2px; font-weight:600;">${data.title}</h5>
+                        <p style="font-size:0.8rem; color:var(--text-light); opacity:0.8;">${data.message}</p>
                     `;
                     list.appendChild(div);
                 });
-                
+
                 const badge = document.getElementById('notif-badge');
                 badge.textContent = count;
                 badge.style.display = count > 0 ? 'block' : 'none';
@@ -1848,35 +1937,32 @@
 
         window.markRead = (id) => {
             localStorage.setItem(`notif_read_${id}`, 'true');
-            // Trigger listener update without calling router to avoid recursion
             setupNotificationListener();
         }
-        
-        window.loadNotifications = () => {
-             // Refresh notification view without calling router (to prevent recursion)
-             // The notification listener already handles UI updates
-             setupNotificationListener();
-        }
+
+        window.loadNotifications = () => { setupNotificationListener(); }
 
         window.markAllNotificationsRead = () => {
-            document.querySelectorAll('.notification-item').forEach(el => el.classList.remove('unread'));
+            // This is a UI simulation since we rely on localStorage
+            const list = document.getElementById('notification-list');
+            Array.from(list.children).forEach(child => {
+                 // In a real app, logic would be deeper, here we rely on user clicking individually or just visually clearing badge
+            });
             document.getElementById('notif-badge').style.display = 'none';
             showToast("All marked as read");
         }
 
-        // --- ADMIN DONOR & SETTINGS ---
         window.saveDonor = async () => {
             const name = document.getElementById('donor-name').value;
             const group = document.getElementById('donor-group').value;
             const phone = document.getElementById('donor-phone').value;
-            
+
             if(!name) return;
             await addDoc(collection(db, "donors"), { name, bloodGroup: group, phone, address: document.getElementById('donor-address').value, status: 'active', role: 'donor', createdAt: serverTimestamp() });
             showToast("Donor Added");
             closeModal('modal-add-donor');
         }
 
-        // ABOUT & SOCIAL
         window.saveAboutSettings = async () => {
              await setDoc(doc(db, "settings", "about"), {
                  text: document.getElementById('admin-about-text').value,
@@ -1898,7 +1984,7 @@
                 document.getElementById('about-social-icons').innerHTML = html;
             }
         }
-        
+
         async function populateAdminAbout(){
             const snap = await getDoc(doc(db, "settings", "about"));
             if(snap.exists()){
@@ -1910,7 +1996,6 @@
             }
         }
 
-        // --- DONATION ---
         async function fetchDonationSettings() {
             const d = await getDoc(doc(db, "settings", "donation"));
             if(d.exists()) {
@@ -1926,7 +2011,6 @@
         }
         window.copyDonation = () => { navigator.clipboard.writeText(document.getElementById('display-donation-number').textContent); showToast("Copied"); }
 
-        // --- FUND ADMIN ---
         window.submitFund = async (type) => {
             const id = type === 'expense' ? 'expense' : 'fund';
             await addDoc(collection(db, "funds"), { 
@@ -1941,28 +2025,30 @@
             loadHomeData();
         }
 
-        // --- UPDATED ADMIN FUNCTIONS ---
-
         async function loadAdminData() {
             const list = document.getElementById('fund-history-list');
-            // Skeleton Loader for Admin List
             list.innerHTML = `
-                <div class="skeleton skeleton-text w-full" style="height:30px; margin-bottom:10px;"></div>
-                <div class="skeleton skeleton-text w-full" style="height:30px; margin-bottom:10px;"></div>
-                <div class="skeleton skeleton-text w-full" style="height:30px; margin-bottom:10px;"></div>
+                <div class="skeleton" style="height:30px; margin-bottom:10px;"></div>
+                <div class="skeleton" style="height:30px; margin-bottom:10px;"></div>
+                <div class="skeleton" style="height:30px; margin-bottom:10px;"></div>
             `;
-            
+
             const snap = await getDocs(query(collection(db, "funds"), orderBy("timestamp", "desc"), limit(20)));
-            list.innerHTML = ''; // Clear skeleton
+            list.innerHTML = ''; 
+
+            let totalInc = 0;
+            let totalExp = 0;
 
             snap.forEach(docSnap => {
                  const d = docSnap.data();
                  const color = d.type === 'expense' ? 'red' : 'green';
                  const sign = d.type === 'expense' ? '-' : '+';
                  
-                 // প্রতিটা আইটেমে Edit আইকন যোগ করা হলো
+                 if(d.type === 'expense') totalExp += Number(d.amount);
+                 else totalInc += Number(d.amount);
+
                  const div = document.createElement('div');
-                 div.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee;";
+                 div.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.05);";
                  div.innerHTML = `
                     <div style="flex:1">
                         <span style="font-weight:600;">${d.name}</span>
@@ -1976,9 +2062,28 @@
                  `;
                  list.appendChild(div);
             });
+
+            // Update Pie Chart
+            const balance = totalInc - totalExp;
+            document.getElementById('chart-balance').textContent = balance + '৳';
+            
+            // Calculate percentage for conic-gradient
+            // Start Green (Income), End Red (Expense)
+            // If total = Inc + Exp.
+            const totalVolume = totalInc + totalExp;
+            let incPct = 100;
+            if(totalVolume > 0) {
+                incPct = (totalInc / totalVolume) * 100;
+            }
+            
+            const chart = document.getElementById('admin-pie-chart');
+            // Using primary var directly won't work in JS for dynamic gradient string easily unless computed
+            // Hardcoding colors matching CSS vars for simplicity in this logic block
+            const cGreen = '#11998e';
+            const cRed = '#ff4b4b';
+            chart.style.background = `conic-gradient(${cGreen} 0% ${incPct}%, ${cRed} ${incPct}% 100%)`;
         }
 
-        // নতুন: মডাল ওপেন করার ফাংশন
         window.openEditTransaction = (id, name, amount, type) => {
             document.getElementById('edit-trans-id').value = id;
             document.getElementById('edit-trans-name').value = name;
@@ -1986,7 +2091,6 @@
             openModal('modal-edit-transaction');
         }
 
-        // নতুন: ডাটা আপডেট করার ফাংশন
         window.saveEditedTransaction = async () => {
             const id = document.getElementById('edit-trans-id').value;
             const name = document.getElementById('edit-trans-name').value;
@@ -2002,8 +2106,8 @@
                 });
                 showToast("Transaction Updated");
                 closeModal('modal-edit-transaction');
-                loadAdminData(); // লিস্ট রিফ্রেশ
-                loadHomeData();  // ব্যালেন্স রিফ্রেশ
+                loadAdminData(); 
+                loadHomeData();  
             } catch(e) {
                 showToast("Error updating");
                 console.error(e);
@@ -2011,10 +2115,9 @@
             toggleLoader(false);
         }
 
-        // নতুন: ডাটা ডিলিট করার ফাংশন
         window.deleteTransaction = async () => {
             const id = document.getElementById('edit-trans-id').value;
-            if(!confirm("Are you sure you want to delete this record? This affects total balance.")) return;
+            if(!confirm("Are you sure you want to delete this record?")) return;
 
             toggleLoader(true);
             try {
@@ -2032,9 +2135,7 @@
         // ===== USER MANAGEMENT SYSTEM =====
         let allUsersData = [];
         let lastUserDoc = null;
-        let usersLoaded = 0;
 
-        // Open User Management View
         window.openUserManagement = () => {
             if(!isAdmin) {
                 showToast("Access Denied");
@@ -2045,14 +2146,12 @@
             loadUsersList();
         }
 
-        // Load Users List
         async function loadUsersList(loadMore = false) {
             const list = document.getElementById('users-management-list');
-            
+
             if(!loadMore) {
                 list.innerHTML = '<div class="skeleton" style="height:60px; margin-bottom:10px;"></div>'.repeat(3);
                 lastUserDoc = null;
-                usersLoaded = 0;
                 allUsersData = [];
             }
 
@@ -2062,118 +2161,90 @@
             }
 
             const snap = await getDocs(q);
-            
+
             if(!loadMore) list.innerHTML = '';
 
             if(snap.empty) {
                 document.getElementById('btn-load-more-users').classList.add('hidden');
-                if(!loadMore) list.innerHTML = '<p style="text-align:center; opacity:0.6; padding:2rem;">No users found</p>';
+                if(!loadMore) list.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>';
                 return;
             }
 
             lastUserDoc = snap.docs[snap.docs.length - 1];
-            
+
             snap.forEach(docSnap => {
                 const userData = { id: docSnap.id, ...docSnap.data() };
                 allUsersData.push(userData);
                 renderUserCard(userData, list);
             });
 
-            usersLoaded = allUsersData.length;
             document.getElementById('btn-load-more-users').classList.remove('hidden');
-            
             updateUserStats();
         }
 
         window.loadMoreUsers = () => loadUsersList(true);
 
-        // Render User Card
         function renderUserCard(user, container) {
             const role = user.role || 'member';
             const status = user.status === 'blocked' ? 'blocked' : 'active';
             const joinDate = user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : 'N/A';
-            
+
             const card = document.createElement('div');
             card.className = 'user-mgmt-card';
             card.setAttribute('data-user-id', user.id);
             card.setAttribute('data-role', role);
             card.setAttribute('data-status', status);
             card.setAttribute('data-search-text', `${user.name} ${user.email} ${user.bloodGroup || ''}`.toLowerCase());
-            
+
             const avatar = user.profileImage 
                 ? `<img src="${user.profileImage}" class="user-mgmt-avatar" alt="${user.name}">`
                 : `<div class="user-mgmt-avatar"><i class="fas fa-user"></i></div>`;
-            
+
             card.innerHTML = `
                 ${avatar}
                 <div class="user-mgmt-info">
-                    <div class="user-mgmt-name">${user.name || 'No Name'}</div>
-                    <div class="user-mgmt-email">${user.email}</div>
-                    <div class="user-mgmt-meta">
-                        <span class="user-badge badge-${role}">${role.toUpperCase()}</span>
-                        <span class="user-badge badge-${status}">${status.toUpperCase()}</span>
-                        ${user.bloodGroup ? `<span class="user-badge" style="background:#ffebee; color:#d32f2f;">${user.bloodGroup}</span>` : ''}
-                        <span style="font-size:0.7rem; opacity:0.6;">Joined: ${joinDate}</span>
+                    <div class="user-mgmt-name" style="font-weight:600;">${user.name || 'No Name'}</div>
+                    <div class="user-mgmt-email" style="font-size:0.75rem; opacity:0.7;">${user.email}</div>
+                    <div class="user-mgmt-meta" style="margin-top:4px;">
+                        <span class="badge-admin" style="background:${role==='admin'?'var(--primary)':'#888'};">${role.toUpperCase()}</span>
+                        ${status === 'blocked' ? '<span class="badge-blocked">BLOCKED</span>' : ''}
+                        ${user.bloodGroup ? `<span style="font-size:0.7rem; background:#ffebee; color:#d32f2f; padding:2px 6px; border-radius:4px;">${user.bloodGroup}</span>` : ''}
                     </div>
                 </div>
-                <div class="user-mgmt-actions">
-                    <button class="action-icon-btn" onclick="openUserDetails('${user.id}')" title="View Details">
-                        <i class="fas fa-eye text-primary"></i>
-                    </button>
-                    <button class="action-icon-btn" onclick="openEditRole('${user.id}', '${user.name}', '${role}')" title="Change Role">
-                        <i class="fas fa-user-tag" style="color:#2196F3;"></i>
-                    </button>
-                    <button class="action-icon-btn" onclick="openBlockUser('${user.id}', '${user.name}', '${status}')" title="${status === 'blocked' ? 'Unblock' : 'Block'}">
-                        <i class="fas fa-${status === 'blocked' ? 'unlock' : 'ban'}" style="color:${status === 'blocked' ? '#4CAF50' : '#ff9800'};"></i>
-                    </button>
-                    <button class="action-icon-btn" onclick="openDeleteUser('${user.id}', '${user.name}')" title="Delete User">
-                        <i class="fas fa-trash text-red"></i>
-                    </button>
+                <div style="display:flex; gap:5px;">
+                    <button class="action-icon-btn" onclick="openUserDetails('${user.id}')"><i class="fas fa-eye"></i></button>
+                    <button class="action-icon-btn" onclick="openEditRole('${user.id}', '${user.name}', '${role}')"><i class="fas fa-user-tag text-primary"></i></button>
+                    <button class="action-icon-btn" onclick="openBlockUser('${user.id}', '${user.name}', '${status}')"><i class="fas fa-${status === 'blocked' ? 'unlock' : 'ban'}" style="color:${status === 'blocked' ? 'green' : 'orange'};"></i></button>
+                    <button class="action-icon-btn" onclick="openDeleteUser('${user.id}', '${user.name}')"><i class="fas fa-trash text-red"></i></button>
                 </div>
             `;
-            
             container.appendChild(card);
         }
 
-        // Filter Users
         window.filterUsers = () => {
             const searchTerm = document.getElementById('user-search').value.toLowerCase();
             const roleFilter = document.getElementById('role-filter').value;
             const statusFilter = document.getElementById('status-filter').value;
-            
-            const cards = document.querySelectorAll('.user-mgmt-card');
-            
-            cards.forEach(card => {
-                const searchText = card.getAttribute('data-search-text');
-                const cardRole = card.getAttribute('data-role');
-                const cardStatus = card.getAttribute('data-status');
-                
-                const matchSearch = searchText.includes(searchTerm);
-                const matchRole = !roleFilter || cardRole === roleFilter;
-                const matchStatus = !statusFilter || cardStatus === statusFilter;
-                
-                if(matchSearch && matchRole && matchStatus) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
+            document.querySelectorAll('.user-mgmt-card').forEach(card => {
+                const text = card.getAttribute('data-search-text');
+                const r = card.getAttribute('data-role');
+                const s = card.getAttribute('data-status');
+                const match = text.includes(searchTerm) && (!roleFilter || r === roleFilter) && (!statusFilter || s === statusFilter);
+                card.style.display = match ? 'flex' : 'none';
             });
         }
 
-        // Update User Stats
         function updateUserStats() {
             const total = allUsersData.length;
             const active = allUsersData.filter(u => u.status !== 'blocked').length;
             const blocked = allUsersData.filter(u => u.status === 'blocked').length;
             const admins = allUsersData.filter(u => u.role === 'admin').length;
-            
             document.getElementById('total-users-count').textContent = total;
             document.getElementById('active-users-count').textContent = active;
             document.getElementById('blocked-users-count').textContent = blocked;
             document.getElementById('admin-count').textContent = admins;
         }
 
-        // Edit Role Functions
         window.openEditRole = (userId, userName, currentRole) => {
             document.getElementById('edit-role-user-id').value = userId;
             document.getElementById('edit-role-user-name').textContent = userName;
@@ -2184,81 +2255,44 @@
         window.saveUserRole = async () => {
             const userId = document.getElementById('edit-role-user-id').value;
             const newRole = document.getElementById('edit-role-select').value;
-            
             toggleLoader(true);
             try {
                 await updateDoc(doc(db, "users", userId), { role: newRole });
-                showToast("Role updated successfully");
+                showToast("Role updated");
                 closeModal('modal-edit-user-role');
-                
-                // Update local data
-                const userIndex = allUsersData.findIndex(u => u.id === userId);
-                if(userIndex !== -1) {
-                    allUsersData[userIndex].role = newRole;
-                }
-                
-                // Refresh list
-                const list = document.getElementById('users-management-list');
-                list.innerHTML = '';
-                allUsersData.forEach(u => renderUserCard(u, list));
-                updateUserStats();
-            } catch(e) {
-                showToast("Error updating role");
-                console.error(e);
-            }
+                loadUsersList();
+            } catch(e) { showToast("Error"); console.error(e); }
             toggleLoader(false);
         }
 
-        // Block/Unblock Functions
         window.openBlockUser = (userId, userName, currentStatus) => {
             document.getElementById('block-user-id').value = userId;
             document.getElementById('block-user-name').textContent = userName;
-            
-            if(currentStatus === 'blocked') {
-                document.getElementById('block-modal-title').textContent = 'Unblock User';
-                document.getElementById('block-confirmation-text').textContent = 'This user will be able to log in and use the app again.';
-                document.getElementById('block-confirm-btn').textContent = 'Unblock User';
-                document.getElementById('block-confirm-btn').className = 'success';
-            } else {
-                document.getElementById('block-modal-title').textContent = 'Block User';
-                document.getElementById('block-confirmation-text').textContent = 'This user will not be able to log in or access the app.';
-                document.getElementById('block-confirm-btn').textContent = 'Block User';
-                document.getElementById('block-confirm-btn').className = 'danger';
-            }
-            
+            const isBlocked = currentStatus === 'blocked';
+            document.getElementById('block-modal-title').textContent = isBlocked ? 'Unblock User' : 'Block User';
+            document.getElementById('block-confirmation-text').textContent = isBlocked ? 'User will regain access.' : 'User will lose access.';
+            const btn = document.getElementById('block-confirm-btn');
+            btn.textContent = isBlocked ? 'Unblock' : 'Block';
+            btn.className = isBlocked ? 'success' : 'danger'; // Assuming success class exists or default
+            if(isBlocked) btn.style.backgroundColor = 'var(--success)';
             openModal('modal-block-user');
         }
 
         window.confirmBlockUser = async () => {
             const userId = document.getElementById('block-user-id').value;
-            const userIndex = allUsersData.findIndex(u => u.id === userId);
-            const currentStatus = userIndex !== -1 ? allUsersData[userIndex].status : 'active';
-            const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
-            
+            // Get current status from local data to toggle
+            const user = allUsersData.find(u => u.id === userId);
+            const newStatus = user.status === 'blocked' ? 'active' : 'blocked';
             toggleLoader(true);
             try {
                 await updateDoc(doc(db, "users", userId), { status: newStatus });
-                showToast(newStatus === 'blocked' ? "User blocked" : "User unblocked");
+                showToast("Status updated");
                 closeModal('modal-block-user');
-                
-                // Update local data
-                if(userIndex !== -1) {
-                    allUsersData[userIndex].status = newStatus;
-                }
-                
-                // Refresh list
-                const list = document.getElementById('users-management-list');
-                list.innerHTML = '';
-                allUsersData.forEach(u => renderUserCard(u, list));
-                updateUserStats();
-            } catch(e) {
-                showToast("Error updating user status");
-                console.error(e);
-            }
+                loadUsersList();
+            } catch(e) { showToast("Error"); }
             toggleLoader(false);
         }
 
-        // Delete User Functions
         window.openDeleteUser = (userId, userName) => {
             document.getElementById('delete-user-id').value = userId;
             document.getElementById('delete-user-name').textContent = userName;
@@ -2267,80 +2301,42 @@
         }
 
         window.confirmDeleteUser = async () => {
-            const confirmation = document.getElementById('delete-confirmation-input').value;
-            if(confirmation !== 'DELETE') {
-                showToast("Please type DELETE to confirm");
-                return;
-            }
-            
+            if(document.getElementById('delete-confirmation-input').value !== 'DELETE') return showToast("Type DELETE");
             const userId = document.getElementById('delete-user-id').value;
-            
             toggleLoader(true);
             try {
-                // Delete user document
                 await deleteDoc(doc(db, "users", userId));
-                showToast("User deleted permanently");
+                showToast("User deleted");
                 closeModal('modal-delete-user');
-                
-                // Remove from local data
-                allUsersData = allUsersData.filter(u => u.id !== userId);
-                
-                // Refresh list
-                const list = document.getElementById('users-management-list');
-                list.innerHTML = '';
-                allUsersData.forEach(u => renderUserCard(u, list));
-                updateUserStats();
-            } catch(e) {
-                showToast("Error deleting user");
-                console.error(e);
-            }
+                loadUsersList();
+            } catch(e) { showToast("Error"); }
             toggleLoader(false);
         }
 
-        // View User Details
         window.openUserDetails = async (userId) => {
             toggleLoader(true);
             try {
                 const userDoc = await getDoc(doc(db, "users", userId));
-                if(!userDoc.exists()) {
-                    showToast("User not found");
-                    toggleLoader(false);
-                    return;
-                }
-                
-                const user = userDoc.data();
-                const joinDate = user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : 'N/A';
-                const lastActive = user.lastActive ? new Date(user.lastActive.toDate()).toLocaleString() : 'Never';
-                
-                const detailsHTML = `
-                    <div style="text-align:center; margin-bottom:15px;">
-                        ${user.profileImage ? `<img src="${user.profileImage}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:10px;">` : ''}
-                        <h4>${user.name}</h4>
-                        <span class="user-badge badge-${user.role || 'member'}">${(user.role || 'member').toUpperCase()}</span>
-                    </div>
-                    <div style="text-align:left; line-height:1.8;">
-                        <p><strong>Email:</strong> ${user.email}</p>
+                if(userDoc.exists()) {
+                    const user = userDoc.data();
+                    const html = `
+                        <div style="text-align:center; margin-bottom:15px;">
+                            ${user.profileImage ? `<img src="${user.profileImage}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">` : '<i class="fas fa-user-circle fa-3x"></i>'}
+                            <h4>${user.name}</h4>
+                            <p>${user.email}</p>
+                        </div>
                         <p><strong>Phone:</strong> ${user.phone || 'N/A'}</p>
-                        <p><strong>Blood Group:</strong> ${user.bloodGroup || 'N/A'}</p>
                         <p><strong>Address:</strong> ${user.address || 'N/A'}</p>
-                        <p><strong>Status:</strong> <span class="user-badge badge-${user.status === 'blocked' ? 'blocked' : 'active'}">${(user.status === 'blocked' ? 'blocked' : 'active').toUpperCase()}</span></p>
-                        <p><strong>Blood Eligible:</strong> ${user.bloodEligible ? '✅ Yes' : '❌ No'}</p>
-                        <p><strong>Joined:</strong> ${joinDate}</p>
-                        <p><strong>Last Active:</strong> ${lastActive}</p>
-                        ${user.socialLinks?.facebook ? `<p><strong>Facebook:</strong> <a href="${user.socialLinks.facebook}" target="_blank">View Profile</a></p>` : ''}
-                    </div>
-                `;
-                
-                document.getElementById('user-details-content').innerHTML = detailsHTML;
-                openModal('modal-user-details');
-            } catch(e) {
-                showToast("Error loading user details");
-                console.error(e);
-            }
+                        <p><strong>Blood:</strong> ${user.bloodGroup || 'N/A'}</p>
+                        <p><strong>Status:</strong> ${user.status}</p>
+                        <p><strong>Joined:</strong> ${user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : 'N/A'}</p>
+                    `;
+                    document.getElementById('user-details-content').innerHTML = html;
+                    openModal('modal-user-details');
+                }
+            } catch(e) { console.error(e); }
             toggleLoader(false);
         }
-        // ===== END USER MANAGEMENT SYSTEM =====
     </script>
-<script src="update-checker.js"></script>
 </body>
 </html>
