@@ -2252,9 +2252,35 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
         }
 
         async function sendNotificationToAll(title, message, type, adminOnly = false) {
-             await addDoc(collection(db, "notifications"), {
-                 title, message, type, timestamp: serverTimestamp(), target: adminOnly ? 'admin' : 'all'
-             });
+            // ১. ইন-অ্যাপ নোটিফিকেশন (আগের কোড)
+            await addDoc(collection(db, "notifications"), {
+                title, message, type, timestamp: serverTimestamp(), target: adminOnly ? 'admin' : 'all'
+            });
+
+            // ২. OneSignal পুশ নোটিফিকেশন (নতুন কোড)
+            const oneSignalAppId = "09fa0ffd-e3bc-40e5-aef4-2d7bd0774c93"; 
+            const restApiKey = "os_v2_app_bh5a77pdxraollxufv55a52msnpgfppy4gqeeifd23ksnf73gqxa5ilbf5yph34d3am7ipnb6urbhwvkf6nbxxwf4zmaomnf4iq6alq"; 
+
+            const payload = {
+                app_id: oneSignalAppId,
+                included_segments:``,
+                headings: { en: title },
+                contents: { en: message }
+            };
+
+            try {
+                await fetch("https://onesignal.com/api/v1/notifications", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                        "Authorization": "Basic " + restApiKey
+                    },
+                    body: JSON.stringify(payload)
+                });
+                console.log("Push Notification Sent Successfully!");
+            } catch (e) {
+                console.error("Push Notification Error:", e);
+            }
         }
 
         function setupNotificationListener() {
