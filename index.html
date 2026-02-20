@@ -61,11 +61,13 @@
             background-attachment: fixed;
             color: var(--text-light); 
             transition: background-color 0.3s, color 0.3s; 
-            padding-bottom: 70px; /* Reduced padding for compact nav */
+            padding-bottom: 70px;
+            overscroll-behavior-y: none; /* Reduced padding for compact nav */
         }
 
         /* UTILITIES */
         .hidden { display: none !important; }
+        body:not(.is-admin) .admin-only { display: none !important; } /* এই লাইনটি যোগ করা হয়েছে */
         .flex { display: flex; }
         .flex-col { flex-direction: column; }
         .items-center { align-items: center; }
@@ -488,11 +490,9 @@
         <header>
             <h1><span data-i18n="app_title">আল ইখলাছ</span> <span id="user-role-badge" style="font-size:0.7rem; background:rgba(255,255,255,0.2); padding:2px 6px; border-radius:4px;">User</span></h1>
             <div style="display:flex; align-items:center;">
-                <!-- Reload Button added -->
-                <i id="btn-reload" class="fas fa-sync-alt reload-btn" onclick="manualReload()" style="margin-right:15px;"></i>
-
+                
                 <div style="position:relative; margin-right: 15px;">
-                    <i class="fas fa-bell header-menu-btn" onclick="router('notifications', null)">
+                    <i class="fas fa-bell header-menu-btn" onclick="router('notificatons', null)">
                         <span id="notif-badge" class="badge-count">0</span>
                     </i>
                 </div>
@@ -517,7 +517,10 @@
                 </div>
             </div>
         </header>
-
+<!-- PULL TO REFRESH SPINNER -->
+        <div id="ptr-container">
+            <div class="ptr-icon"><i class="fas fa-sync-alt"></i></div>
+        </div>
         <!-- FLOATING ACTION BUTTON -->
         <div class="fab-container">
             <div class="fab-main" onclick="toggleFab()">
@@ -539,12 +542,13 @@
         <!-- VIEW: HOME -->
         <div id="view-home" class="section">
             <!-- Stats Compact Grid -->
+            <!-- Stats Compact Grid -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="openTransactionView('collection')" style="cursor:pointer; border-color: var(--success);">
                     <div class="stat-val" id="stat-funds">0৳</div>
                     <div class="stat-label" data-i18n="stat_collection">Collection</div>
                 </div>
-                <div class="stat-card" style="border-color: var(--danger);">
+                <div class="stat-card" onclick="openTransactionView('expense')" style="cursor:pointer; border-color: var(--danger);">
                     <div class="stat-val text-red" id="stat-expense">0৳</div>
                     <div class="stat-label" data-i18n="stat_expense">Expense</div>
                 </div>
@@ -621,7 +625,18 @@
             <h4 style="margin:10px 0;"><span data-i18n="header_active_req">Active Requests</span> <span id="active-blood-count" style="font-size:0.8rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0</span></h4>
             <div id="blood-list"></div>
         </div>
-
+         <!-- VIEW: TRANSACTIONS (Public) -->
+        <div id="view-transactions" class="section hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 id="public-trans-title">Transactions</h3>
+                <button onclick="router('home', document.querySelector('.nav-item:nth-child(1)'))" class="small-btn secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+            <div id="public-trans-list">
+                <!-- ডাটা এখানে লোড হবে -->
+            </div>
+        </div>
         <!-- VIEW: MEMBERS DIRECTORY -->
         <div id="view-members" class="section hidden">
             <h3 data-i18n="header_members">👥 Member Directory</h3>
@@ -1272,6 +1287,12 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
         }
 
         window.router = (viewName, navEl, param = null) => {
+            // সিকিউরিটি চেক: এডমিন ছাড়া কেউ এডমিন প্যানেলে যেতে চাইলে ব্লক করে দিবে
+            if (viewName === 'admin' && !isAdmin) {
+                showToast("Access Denied! Only admins can view this.");
+                return;
+            }
+
             // Hide all sections
             document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
             // Show target section
@@ -1718,7 +1739,73 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
         window.filterBloodEligible = () => {
             showToast("Showing requests matching eligible donors...");
         }
+// --- PUBLIC TRANSACTION VIEW LOGIC ---
+        window.openTransactionView = async (type) => {
+            // অন্য সব পেজ লুকিয়ে Transaction পেজ ওপেন করা
+            document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-transactions').classList.remove('hidden');
+            
+            // টাইটেল সেট করা
+            const titleEl = document.getElementById('public-trans-title');
+            if(type === 'collection') {
+                titleEl.innerHTML = '<i class="fas fa-hand-holding-dollar text-green"></i> Collection List';
+            } else {
+                titleEl.innerHTML = '<i class="fas fa-file-invoice-dollar text-red"></i> Expense List';
+            }
 
+            const list = document.getElementById('public-trans-list');
+            list.innerHTML = `
+                <div class="skeleton" style="height:60px; margin-bottom:10px;"></div>
+                <div class="skeleton" style="height:60px; margin-bottom:10px;"></div>
+                <div class="skeleton" style="height:60px; margin-bottom:10px;"></div>
+            `;
+
+            try {
+                // ডাটাবেস থেকে সর্বশেষ ১০০ টি ট্রানজেকশন আনা (যেন দ্রুত লোড হয়)
+                const q = query(collection(db, "funds"), orderBy("timestamp", "desc"), limit(100));
+                const snap = await getDocs(q);
+                
+                list.innerHTML = '';
+                let hasData = false;
+
+                snap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    
+                    // শুধু ক্লিক করা টাইপের (Collection/Expense) ডাটা ফিল্টার করা
+                    if(d.type === type || (type === 'collection' && d.type !== 'expense')) {
+                        hasData = true;
+                        const color = type === 'expense' ? 'var(--danger)' : 'var(--success)';
+                        const sign = type === 'expense' ? '-' : '+';
+                        const dateStr = d.timestamp ? new Date(d.timestamp.toDate()).toLocaleDateString() : 'N/A';
+                        
+                        const div = document.createElement('div');
+                        div.className = 'card flex items-center justify-between';
+                        div.style.marginBottom = '10px';
+                        div.style.borderLeft = `4px solid ${color}`;
+                        
+                        // এডমিন প্যানেলের মতো এডিট বা ডিলিট বাটন এখানে রাখা হয়নি
+                        div.innerHTML = `
+                            <div>
+                                <h4 style="margin:0; font-size:1rem;">${d.name}</h4>
+                                <small style="color:#888;">${dateStr}</small>
+                            </div>
+                            <div style="font-weight:bold; color:${color}; font-size:1.1rem;">
+                                ${sign}${d.amount}৳
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    }
+                });
+
+                if(!hasData) {
+                    list.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No records found</p></div>`;
+                }
+
+            } catch (error) {
+                console.error("Error fetching transactions:", error);
+                list.innerHTML = `<p class="text-center text-red">Error loading data. Check connection.</p>`;
+            }
+        };
         async function loadMembers(isLoadMore = false) {
             const list = document.getElementById('members-list');
 
@@ -2709,6 +2796,101 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
                 }
             } catch(e) { console.error(e); }
             toggleLoader(false);
+        }
+// ===== PULL TO REFRESH (TOUCH & MOUSE LOGIC) =====
+        let touchStartY = 0;
+        let touchCurrentY = 0;
+        let isPulling = false;
+        const pullThreshold = 70; // কতটুকু নিচে টানলে রিফ্রেশ হবে
+
+        // মোবাইলের টাচ ইভেন্ট (এখানে e.touches ফিক্স করা হয়েছে)
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) startPull(e.touches.clientY);
+        }, { passive: true });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) movePull(e, e.touches.clientY);
+        }, { passive: false });
+        
+        document.addEventListener('touchend', endPull);
+
+        // কম্পিউটারের মাউস ইভেন্ট
+        document.addEventListener('mousedown', (e) => startPull(e.clientY));
+        document.addEventListener('mousemove', (e) => { if(isPulling) movePull(e, e.clientY) });
+        document.addEventListener('mouseup', endPull);
+
+        function startPull(clientY) {
+            // স্ক্রিন একদম উপরে থাকলে কাজ করবে (০ থেকে ৫ পিক্সেলের মধ্যে)
+            if (window.scrollY <= 5) {
+                touchStartY = clientY;
+                isPulling = true;
+                const ptr = document.getElementById('ptr-container');
+                if(ptr) ptr.style.transition = 'none'; 
+            }
+        }
+
+        function movePull(e, clientY) {
+            if (!isPulling) return;
+            touchCurrentY = clientY;
+            const pullDistance = touchCurrentY - touchStartY;
+
+            if (pullDistance > 0 && window.scrollY <= 5) {
+                const ptr = document.getElementById('ptr-container');
+                if(ptr) {
+                    let visualDistance = pullDistance * 0.4; 
+                    if(visualDistance > 100) visualDistance = 100;
+                    
+                    ptr.style.opacity = Math.min(visualDistance / pullThreshold, 1);
+                    ptr.style.transform = `translateY(${visualDistance - 50}px)`; // নিচ দিকে নামবে
+                    
+                    const icon = ptr.querySelector('i');
+                    if(icon && !ptr.classList.contains('ptr-loading')) {
+                        icon.style.transform = `rotate(${visualDistance * 3}deg)`; // আইকনটি ঘুরবে
+                    }
+                }
+                if (e.cancelable) e.preventDefault(); 
+            }
+        }
+
+        function endPull() {
+            if (!isPulling) return;
+            isPulling = false;
+            const ptr = document.getElementById('ptr-container');
+            const pullDistance = touchCurrentY - touchStartY;
+
+            if (ptr) {
+                ptr.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                
+                if (pullDistance * 0.4 > pullThreshold && window.scrollY <= 5) {
+                    ptr.classList.add('ptr-loading');
+                    ptr.style.transform = `translateY(20px)`; 
+                    
+                    refreshActivePage(); // ডাটা রিফ্রেশ হবে
+
+                    // ১.৫ সেকেন্ড পর লুকিয়ে যাবে
+                    setTimeout(() => {
+                        ptr.classList.remove('ptr-loading');
+                        ptr.style.transform = 'translateY(-100px)';
+                        ptr.style.opacity = '0';
+                    }, 1500);
+                } else {
+                    // অল্প টেনে ছেড়ে দিলে আবার উপরে ফিরে যাবে
+                    ptr.style.transform = 'translateY(-100px)';
+                    ptr.style.opacity = '0';
+                }
+            }
+            touchStartY = 0;
+            touchCurrentY = 0;
+        }
+
+        // বর্তমান ওপেন থাকা পেজের ডাটা রিফ্রেশ করার ফাংশন
+        window.refreshActivePage = function() {
+            if(!document.getElementById('view-home').classList.contains('hidden')) loadHomeData();
+            if(!document.getElementById('view-blood').classList.contains('hidden')) loadBloodRequests();
+            if(!document.getElementById('view-members').classList.contains('hidden')) loadMembers();
+            if(!document.getElementById('view-admin').classList.contains('hidden')) loadAdminData();
+            if(!document.getElementById('view-notifications').classList.contains('hidden')) loadNotifications();
+            if(!document.getElementById('chat-list-view').classList.contains('hidden')) loadChatInbox();
         }
     </script>
 </body>
