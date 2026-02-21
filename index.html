@@ -1256,25 +1256,38 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
             setTimeout(() => el.remove(), 3000);
         }
 // --- SHARE APP LOGIC ---
+        // --- SHARE APP LOGIC (Updated for AppCreator24 & WebView) ---
         window.shareApp = async () => {
-            // শেয়ার করার সময় যে টেক্সট এবং লিংক যাবে
-            const shareData = {
-                title: 'আল ইখলাছ | Al Ikhlas Organization',
-                text: 'আল ইখলাছ অর্গানাইজেশনের অ্যাপটি ইন্সটল করুন। এখানে রক্তদান, অনুদান এবং মেম্বারদের সাথে সহজে যুক্ত থাকতে পারবেন।',
-                url: 'https://www.appcreator24.com/app3927201-hqxpye' // এখানে আপনার অ্যাপের আসল লিংক দিতে পারেন
-            };
-
+            const shareText = 'আল ইখলাছ অর্গানাইজেশনের অ্যাপটি ইন্সটল করুন। এখানে রক্তদান, অনুদান এবং মেম্বারদের সাথে সহজে যুক্ত থাকতে পারবেন। \n\nলিংক: https://www.appcreator24.com/app3927201-hqxpye';
+            
             try {
-                // ব্রাউজার Web Share API সাপোর্ট করে কিনা চেক করা
+                // ১. যদি ব্রাউজার থেকে ওপেন করে (Web Share API)
                 if (navigator.share) {
-                    await navigator.share(shareData);
+                    await navigator.share({
+                        title: 'আল ইখলাছ | Al Ikhlas Organization',
+                        text: shareText
+                    });
                 } else {
-                    // যদি সাপোর্ট না করে (যেমন পুরানো ডেস্কটপ ব্রাউজার), তাহলে লিংকটি কপি হয়ে যাবে
-                    await navigator.clipboard.writeText(shareData.url);
-                    showToast("App link copied to clipboard!");
+                    // ২. যদি AppCreator24 এর APK থেকে ওপেন করে (Native Share Intent)
+                    const isAndroid = /android/i.test(navigator.userAgent);
+                    
+                    if (isAndroid) {
+                        // AppCreator24 এর নিজস্ব শেয়ার একশন কমান্ড
+                        const appCreatorShareLink = `action://share?text=${encodeURIComponent(shareText)}`;
+                        
+                        // একটি অদৃশ্য লিংক বানিয়ে সেটিতে ক্লিক করানো হচ্ছে
+                        const a = document.createElement('a');
+                        a.href = appCreatorShareLink;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    } else {
+                        // ৩. যদি পিসি বা অন্য কোনো আনসাপোর্টেড ডিভাইস হয়, তখন কপি হবে
+                        await navigator.clipboard.writeText(shareText);
+                        showToast("App link copied to clipboard!");
+                    }
                 }
             } catch (err) {
-                // ইউজার শেয়ার বাতিল করলে কোনো এরর দেখানোর দরকার নেই
                 console.log('Share canceled or error:', err);
             }
         }
