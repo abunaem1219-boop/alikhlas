@@ -490,9 +490,11 @@
         <header>
             <h1><span data-i18n="app_title">আল ইখলাছ</span> <span id="user-role-badge" style="font-size:0.7rem; background:rgba(255,255,255,0.2); padding:2px 6px; border-radius:4px;">User</span></h1>
             <div style="display:flex; align-items:center;">
+<!-- Share Button -->
+    <i class="fas fa-share-alt header-menu-btn" onclick="shareApp()" style="margin-right: 15px;" title="Share App"></i>
                 
                 <div style="position:relative; margin-right: 15px;">
-                    <i class="fas fa-bell header-menu-btn" onclick="router('notificatons', null)">
+                    <i class="fas fa-bell header-menu-btn" onclick="router('notifications', null)">
                         <span id="notif-badge" class="badge-count">0</span>
                     </i>
                 </div>
@@ -1253,7 +1255,29 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
             container.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
+// --- SHARE APP LOGIC ---
+        window.shareApp = async () => {
+            // শেয়ার করার সময় যে টেক্সট এবং লিংক যাবে
+            const shareData = {
+                title: 'আল ইখলাছ | Al Ikhlas Organization',
+                text: 'আল ইখলাছ অর্গানাইজেশনের অ্যাপটি ইন্সটল করুন। এখানে রক্তদান, অনুদান এবং মেম্বারদের সাথে সহজে যুক্ত থাকতে পারবেন।',
+                url: 'https://www.appcreator24.com/app3927201-hqxpye' // এখানে আপনার অ্যাপের আসল লিংক দিতে পারেন
+            };
 
+            try {
+                // ব্রাউজার Web Share API সাপোর্ট করে কিনা চেক করা
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    // যদি সাপোর্ট না করে (যেমন পুরানো ডেস্কটপ ব্রাউজার), তাহলে লিংকটি কপি হয়ে যাবে
+                    await navigator.clipboard.writeText(shareData.url);
+                    showToast("App link copied to clipboard!");
+                }
+            } catch (err) {
+                // ইউজার শেয়ার বাতিল করলে কোনো এরর দেখানোর দরকার নেই
+                console.log('Share canceled or error:', err);
+            }
+        }
         window.toggleLoader = (show) => { document.getElementById('global-loader').style.display = show ? 'flex' : 'none'; }
         window.manualReload = () => {
             const btn = document.getElementById('btn-reload');
