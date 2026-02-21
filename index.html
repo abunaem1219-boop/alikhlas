@@ -1257,38 +1257,44 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
         }
 // --- SHARE APP LOGIC ---
         // --- SHARE APP LOGIC (Updated for AppCreator24 & WebView) ---
+        // --- SHARE APP LOGIC (Fixed for Android WebView / AppCreator24) ---
         window.shareApp = async () => {
             const shareText = 'আল ইখলাছ অর্গানাইজেশনের অ্যাপটি ইন্সটল করুন। এখানে রক্তদান, অনুদান এবং মেম্বারদের সাথে সহজে যুক্ত থাকতে পারবেন। \n\nলিংক: https://www.appcreator24.com/app3927201-hqxpye';
             
             try {
-                // ১. যদি ব্রাউজার থেকে ওপেন করে (Web Share API)
+                // ১. যদি ব্রাউজার থেকে ওপেন করে (Web Share API Support থাকলে)
                 if (navigator.share) {
                     await navigator.share({
                         title: 'আল ইখলাছ | Al Ikhlas Organization',
                         text: shareText
                     });
                 } else {
-                    // ২. যদি AppCreator24 এর APK থেকে ওপেন করে (Native Share Intent)
-                    const isAndroid = /android/i.test(navigator.userAgent);
-                    
-                    if (isAndroid) {
-                        // AppCreator24 এর নিজস্ব শেয়ার একশন কমান্ড
-                        const appCreatorShareLink = `action://share?text=${encodeURIComponent(shareText)}`;
-                        
-                        // একটি অদৃশ্য লিংক বানিয়ে সেটিতে ক্লিক করানো হচ্ছে
-                        const a = document.createElement('a');
-                        a.href = appCreatorShareLink;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    } else {
-                        // ৩. যদি পিসি বা অন্য কোনো আনসাপোর্টেড ডিভাইস হয়, তখন কপি হবে
-                        await navigator.clipboard.writeText(shareText);
-                        showToast("App link copied to clipboard!");
-                    }
+                    throw new Error("Web Share not supported");
                 }
             } catch (err) {
-                console.log('Share canceled or error:', err);
+                // ২. যদি AppCreator24-এর ভেতর থেকে কল হয় 
+                const isAndroid = /android/i.test(navigator.userAgent);
+                
+                if (isAndroid) {
+                    // Android এর অফিশিয়াল Share Intent 
+                    const intentUrl = `intent:#Intent;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=${encodeURIComponent(shareText)};end`;
+                    
+                    // এটি সিস্টেমের ডিফল্ট শেয়ার মেনু ওপেন করবে
+                    window.location.href = intentUrl;
+                    
+                    // ব্যাকআপ: যদি কোনো কারণে মেনু ওপেন হতে দেরি হয় বা সাপোর্ট না করে, তাহলে লিংকটি কপিও হয়ে যাবে
+                    setTimeout(() => {
+                        navigator.clipboard.writeText(shareText).then(() => {
+                            showToast("Link copied to clipboard!");
+                        }).catch(e => console.log(e));
+                    }, 1500);
+
+                } else {
+                    // ৩. অন্যান্য ডিভাইস হলে সরাসরি কপি হবে
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        showToast("App link copied to clipboard!");
+                    });
+                }
             }
         }
         window.toggleLoader = (show) => { document.getElementById('global-loader').style.display = show ? 'flex' : 'none'; }
