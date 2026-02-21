@@ -1113,6 +1113,28 @@
         </div>
     </div>
 
+<!-- SHARE APP MODAL -->
+    <div id="modal-share" class="modal hidden" style="z-index: 2000;">
+        <div class="modal-content text-center">
+            <h3 style="margin-bottom: 5px;">Share App</h3>
+            <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">কোথায় শেয়ার করতে চান নির্বাচন করুন</p>
+            
+            <div class="flex-col gap-2">
+                <button onclick="shareVia('whatsapp')" style="background:#25D366; color:white;">
+                    <i class="fab fa-whatsapp" style="font-size:1.2rem; margin-right:5px;"></i> WhatsApp
+                </button>
+                <button onclick="shareVia('facebook')" style="background:#1877F2; color:white;">
+                    <i class="fab fa-facebook-f" style="font-size:1.2rem; margin-right:5px;"></i> Facebook
+                </button>
+                <button onclick="shareVia('copy')" class="secondary">
+                    <i class="fas fa-copy" style="font-size:1.2rem; margin-right:5px;"></i> Copy Link
+                </button>
+            </div>
+            
+            <button onclick="closeModal('modal-share')" style="margin-top:15px; background: transparent; border: none; color: var(--danger); font-weight: bold; box-shadow: none;">Cancel</button>
+        </div>
+    </div>
+
     <!-- TOAST CONTAINER -->
     <div id="toast-container" style="position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 200; width: 300px; text-align: center; pointer-events: none;"></div>
 
@@ -1255,47 +1277,42 @@ const rtdb = getDatabase(app, "https://al-ikhlas-3bae4-default-rtdb.firebaseio.c
             container.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
-// --- SHARE APP LOGIC ---
-        // --- SHARE APP LOGIC (Updated for AppCreator24 & WebView) ---
-        // --- SHARE APP LOGIC (Fixed for Android WebView / AppCreator24) ---
-        window.shareApp = async () => {
-            const shareText = 'আল ইখলাছ অর্গানাইজেশনের অ্যাপটি ইন্সটল করুন। এখানে রক্তদান, অনুদান এবং মেম্বারদের সাথে সহজে যুক্ত থাকতে পারবেন। \n\nলিংক: https://www.appcreator24.com/app3927201-hqxpye';
-            
-            try {
-                // ১. যদি ব্রাউজার থেকে ওপেন করে (Web Share API Support থাকলে)
-                if (navigator.share) {
-                    await navigator.share({
-                        title: 'আল ইখলাছ | Al Ikhlas Organization',
-                        text: shareText
-                    });
-                } else {
-                    throw new Error("Web Share not supported");
-                }
-            } catch (err) {
-                // ২. যদি AppCreator24-এর ভেতর থেকে কল হয় 
-                const isAndroid = /android/i.test(navigator.userAgent);
-                
-                if (isAndroid) {
-                    // Android এর অফিশিয়াল Share Intent 
-                    const intentUrl = `intent:#Intent;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=${encodeURIComponent(shareText)};end`;
-                    
-                    // এটি সিস্টেমের ডিফল্ট শেয়ার মেনু ওপেন করবে
-                    window.location.href = intentUrl;
-                    
-                    // ব্যাকআপ: যদি কোনো কারণে মেনু ওপেন হতে দেরি হয় বা সাপোর্ট না করে, তাহলে লিংকটি কপিও হয়ে যাবে
-                    setTimeout(() => {
-                        navigator.clipboard.writeText(shareText).then(() => {
-                            showToast("Link copied to clipboard!");
-                        }).catch(e => console.log(e));
-                    }, 1500);
+// --- SHARE APP LOGIC (Custom Menu for WebView 100% Working) ---
+        window.shareApp = () => {
+            // শেয়ার বাটনে ক্লিক করলে আমাদের বানানো সুন্দর মেনুটি ওপেন হবে
+            openModal('modal-share');
+        }
 
-                } else {
-                    // ৩. অন্যান্য ডিভাইস হলে সরাসরি কপি হবে
-                    navigator.clipboard.writeText(shareText).then(() => {
-                        showToast("App link copied to clipboard!");
-                    });
+        window.shareVia = async (platform) => {
+            const url = 'https://www.appcreator24.com/app3927201-hqxpye';
+            const text = 'আল ইখলাছ অর্গানাইজেশনের অ্যাপটি ইন্সটল করুন। এখানে রক্তদান, অনুদান এবং মেম্বারদের সাথে সহজে যুক্ত থাকতে পারবেন। \n\nলিংক: ' + url;
+
+            if (platform === 'whatsapp') {
+                // সরাসরি হোয়াটসঅ্যাপে টেক্সট সহ নিয়ে যাবে
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+            } 
+            else if (platform === 'facebook') {
+                // ফেসবুকে লিংক শেয়ার করার পেজে নিয়ে যাবে
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+            } 
+            else if (platform === 'copy') {
+                // লিংক কপি করার ফাংশন
+                try {
+                    await navigator.clipboard.writeText(text);
+                    showToast("Link copied to clipboard!");
+                } catch(e) {
+                    // যদি পুরানো মোবাইল হয় তবে বিকল্প উপায়ে কপি করবে
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textArea);
+                    showToast("Link copied to clipboard!");
                 }
             }
+            // শেয়ার অপশনে ক্লিক করার পর পপ-আপ বন্ধ করে দিবে
+            closeModal('modal-share');
         }
         window.toggleLoader = (show) => { document.getElementById('global-loader').style.display = show ? 'flex' : 'none'; }
         window.manualReload = () => {
